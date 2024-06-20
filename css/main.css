@@ -1,0 +1,92 @@
+body {
+  margin: 0;
+  font-family: Roboto, sans-serif;
+  background-color: #0f0f0f;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  color: #777777;
+  overflow: hidden;
+}
+
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  width: 90%;
+  height: 90%;
+  max-height: 768px;
+  background-color: #111111;
+  padding: 20px;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.clock-container, .weather-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 30%;
+  margin: 10px 0;
+}
+
+.second {
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0ms ease-in;
+}
+
+.second.gone {
+  visibility: visible;
+  opacity: 1;
+  animation: fadeOut 1s linear forwards;
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
+#sun-container {
+ /* display: none;  Hide initially */
+}
+
+#clock {
+  font-size: calc(20vw);
+}
+
+#weather, #other-info {
+  font-size: 2em;
+}
+
+#weather-icon {
+  position: absolute;
+/*  transform: translate(-50%, -50%);*/
+  z-index: 100; /* Ensure it's above other elements if necessary */
+}
+
+.other-info-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 30%;
+  margin: 10px 0;
+}
+
+.bottom-left {
+  position: absolute;
+  width: 250px;
+  height: 202px;
+  bottom: 20px;
+  left: 20px;
+}
