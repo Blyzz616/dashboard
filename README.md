@@ -40,8 +40,7 @@ To do:
 
 - [x] Create a to-do list
 - [ ] Move API calls to a local-server based system, so that calls happen ONCE every 5 minutes, rather than once every 5 minutes per browser accessing the page. Use PHP for this.
-- [ ] On page load: Render the page as quickly as possible. Then preform the calculations for the remainder of the day.  
-  If done at midnight, render in 00:00 and perform the x and y calculations for the reamining 1439 minutes in the day.
+- [ ] ~~On page load: Render the page as quickly as possible. Then preform the calculations for the remainder of the day.~~ invalidated by previous commit
 - [ ] Build a nice bar/line graph showing the next 48 hours with
   - [ ] Temperature line (red above 0 /blue below) (left Y)
   - [ ] Precipitation bar graph (right Y)
