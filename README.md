@@ -11,23 +11,24 @@ Right now though, I'm just warming up!
 Currently looking like this:
 ![image](https://github.com/Blyzz616/dashboard/assets/19424317/8f4cdffe-4720-450c-af52-0ede6e382047)
 
-The circle at the bottom started out life as a day-light indicator. (the little sun would start the day on the left at sunrise, and work its little way over the the right and get there at sunset time.
+The circle at the bottom started out life as a day-light indicator.   
+   The little sun would start the day on the left at sunrise, and work its little way over the top to the right and get there at sunset time.
 
 How though, It's got a weather icon in the middle, and it also grew up a little bit to become a circle. not just a semi-circle.
 
-There are 3 calculations performed during the day:
+There are 3 different calculations performed throughout the day:
 
-1. Daytime Calculation:
+1. Daytime Calculation - Sunrise to Sunset:
 ```math
    \{x, y\} = \{250 - 150 \cos\left(\frac{\pi z}{100}\right), 200 - 150 \sin\left(\frac{\pi z}{100}\right)\}
 ```
 
-2. Between Sunset and Midnight Calculation:
+2. EVening Calculation - Sunset to Midnight:
 ```math
 \{x, y\} = \{250 - 150 \cos\left(\frac{\pi}{100} \left(100 + \frac{z}{2}\right)\right), 200 - 150 \sin\left(\frac{\pi}{100} \left(100 + \frac{z}{2}\right)\right)\}
 ```
 
-3. Between Midnight and Sunrise Calculation:
+3. Morning Calculation - Midnight to Sunrise:
 ```math
 \{x, y\} = \{250 - 150 \cos\left(\frac{\pi}{100} \left(150 + \frac{z}{2}\right)\right), 200 - 150 \sin\left(\frac{\pi}{100} \left(150 + \frac{z}{2}\right)\right)\}
 ```
@@ -61,3 +62,5 @@ To do:
 - [ ] Include Network Monitoring SNMP/SIEM events?
 
 Damn, I got a lot to do on this!
+
+Thanks to [Ninad Munshi](https://math.stackexchange.com/users/698724/ninad-munshi) on [Github](https://math.stackexchange.com/questions/4934077/calculating-percentage-coordinates-on-an-arc) for giving me a push-start with regards to getting the calculations working!
