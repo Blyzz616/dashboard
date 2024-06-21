@@ -40,8 +40,8 @@ I split up the night as there may be slight changes in the timings with the data
 To do:
 
 - [x] Create a to-do list
-- [ ] Move API calls to a local-server based system, so that calls happen ONCE every 5 minutes, rather than once every 5 minutes per browser accessing the page. Use PHP for this.
-- [ ] ~~On page load: Render the page as quickly as possible. Then preform the calculations for the remainder of the day.~~ invalidated by previous commit
+- [x] Move API calls to a local-server based system, so that calls happen ONCE every 5 minutes, rather than once every 5 minutes per browser accessing the page. Use PHP for this.
+- ~~On page load: Render the page as quickly as possible. Then preform the calculations for the remainder of the day.~~ invalidated by previous commit
 - [ ] Build a nice bar/line graph showing the next 48 hours with
   - [ ] Temperature line (red above 0 /blue below) (left Y)
   - [ ] Precipitation bar graph (right Y)
