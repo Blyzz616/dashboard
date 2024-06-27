@@ -43,12 +43,12 @@ To do:
 - [x] Move API calls to a local-server based system, so that calls happen ONCE every 5 minutes, rather than once every 5 minutes per browser accessing the page. Use PHP for this.
 - ~~On page load: Render the page as quickly as possible. Then preform the calculations for the remainder of the day.~~ invalidated by previous commit
 - [ ] Build a nice bar/line graph showing the next 48 hours with
-  - [ ] Temperature line (red above 0 /blue below) (left Y)
-  - [ ] Precipitation bar graph (right Y)
+  - [x] Temperature line (red above 0 /blue below) (left Y)
+  - [x] Precipitation bar graph (right Y)
   - [ ] Can we split this?
-    - [ ] rain
+    - [x] rain
     - [ ] snow
-  - [ ] Cloud Cover Bar (top Y)
+  - [x] Cloud Cover Bar (top Y)
 - [ ] 7-day weather forecast
 - [ ] Windspeed and direction
 - [ ] Include predicted vs actual temperatures
