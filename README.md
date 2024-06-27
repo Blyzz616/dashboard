@@ -9,7 +9,8 @@ However, I've got a few ESP32 boards that need to be put into service to report 
 Right now though, I'm just warming up!
 
 Currently looking like this:
-![image](https://github.com/Blyzz616/dashboard/assets/19424317/8f4cdffe-4720-450c-af52-0ede6e382047)
+![image](https://github.com/Blyzz616/dashboard/assets/19424317/f770824a-1c90-4f66-93a0-86c7b2aa2229)
+
 
 The circle at the bottom started out life as a day-light indicator.   
    The little sun would start the day on the left at sunrise, and work its little way over the top to the right and get there at sunset time.
