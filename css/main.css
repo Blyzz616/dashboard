@@ -1,3 +1,4 @@
+/* Global styles */
 body {
   margin: 0;
   font-family: Roboto, sans-serif;
@@ -15,16 +16,66 @@ body {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  width: 90%;
-  height: 90%;
+  width: 95%;
+  height: 95%;
   max-height: 768px;
   background-color: #111111;
-  padding: 20px;
+  padding: 5px;
   box-sizing: border-box;
   position: relative;
+  max-width: 1366px;
 }
 
-.clock-container, .weather-container {
+.top-row {
+  display: flex;
+  width: 100%;
+  height: 30%;
+  margin-bottom: 10px; /* Adjust spacing */
+}
+
+.left-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-left: 6vw;
+}
+
+.right-column {
+  width: 50%; /* Adjust width as needed */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.weather-container {
+  width: 100%;
+}
+
+#weather, #additional-info {
+  font-size: 2em;
+}
+
+#weather-icon {
+  position: absolute;
+  z-index: 100; /* Ensure it's above other elements if necessary */
+}
+
+.forecast-container {
+  width: 100%; /* Occupy full width of the parent container */
+  height: auto; /* Allow height to adjust automatically */
+  max-width: 100%; /* Ensure it doesn't exceed its container's width */
+  max-height: 100%; /* Ensure it doesn't exceed its container's height */
+}
+
+#forecast-graph {
+  width: 100%; /* Make the SVG element occupy full width of its container */
+  height: auto; /* Allow SVG to adjust its height automatically */
+  display: block; /* Ensure it behaves as a block element */
+}
+
+.clock-container, .other-info-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -34,43 +85,8 @@ body {
   margin: 10px 0;
 }
 
-.second {
-  visibility: hidden;
-  opacity: 0;
-  transition: opacity 0ms ease-in;
-}
-
-.second.gone {
-  visibility: visible;
-  opacity: 1;
-  animation: fadeOut 1s linear forwards;
-}
-
-@keyframes fadeOut {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0.6;
-  }
-}
-
-#sun-container {
- /* display: none;  Hide initially */
-}
-
 #clock {
-  font-size: calc(20vw);
-}
-
-#weather, #other-info {
-  font-size: 2em;
-}
-
-#weather-icon {
-  position: absolute;
-/*  transform: translate(-50%, -50%);*/
-  z-index: 100; /* Ensure it's above other elements if necessary */
+  font-size: calc(18vw);
 }
 
 .other-info-container {
@@ -89,4 +105,20 @@ body {
   height: 202px;
   bottom: 20px;
   left: 20px;
+}
+
+.alert-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 0, 0, 0.8);
+  color: white;
+  padding: 20px;
+  z-index: 1000;
+  display: none; /* Initially hidden */
+}
+
+#sun-container {
+  /* display: none;  Hide initially */
 }
