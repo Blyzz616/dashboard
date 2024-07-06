@@ -53,7 +53,9 @@ To do:
     - [x] snow
   - [x] Cloud Cover Bar (top Y)
 - [x] Disaplay alerts for 45 seconds every 5 minutes
-- [ ] 7-day weather forecast
+- [x] 7-day weather forecast
+   - [ ] Add UVI
+   - [ ] Add Probability of Precip
 - [ ] Windspeed and direction
 - [ ] Include predicted vs actual temperatures
 - [ ] include temperatures from
@@ -64,6 +66,8 @@ To do:
 - [ ] Include stuff from Home Assistant?
 - [ ] Include stuff from Klipper? (3d Printer)
 - [ ] Include Network Monitoring SNMP/SIEM events?
+
+Why is it ever time I mark something as complete, I add at least 2 more items?
 
 Damn, I got a lot to do on this!
 
