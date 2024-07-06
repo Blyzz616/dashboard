@@ -11,7 +11,7 @@ Right now though, I'm just warming up!
 Currently looking like this:
 ![image](https://github.com/Blyzz616/dashboard/assets/19424317/f770824a-1c90-4f66-93a0-86c7b2aa2229)
 
-Now with 7-day forecast!
+Now with 7-day forecast!  
 ![image](https://github.com/Blyzz616/dashboard/assets/19424317/dc52c693-ccdf-4be0-863f-55d21e26ed5b)
 
 The circle at the bottom started out life as a day-light indicator.   
