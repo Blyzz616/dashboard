@@ -1,4 +1,4 @@
-#! /usr/bin/gnuplot
+#!/usr/bin/gnuplot
 
 # Output SVG file
 set terminal svg enhanced size 600,300
@@ -11,7 +11,7 @@ unset title
 unset xlabel
 unset ylabel
 
-# Set multiplot layout (3 rows, 1 column)
+# Set multiplot layout (2 rows, 1 column)
 set multiplot layout 2,1
 set lmargin at screen 0.15
 set rmargin at screen 0.95
@@ -24,7 +24,7 @@ set grid mxtics lt 0 lw 1 lc rgb "#444444"
 
 # Plot 1: Cloud cover
 set size 1,0.2
-set origin 0,0.75
+set origin 0,0.85
 unset xtics
 unset ytics
 set yrange [100:0]
@@ -47,10 +47,12 @@ set xtics format "%H:%M"
 set ytics scale 0
 set xtics scale 0
 
-# Manually set max_temp and min_temp based on known data range
-max_temp = 25
-min_temp = 9
-set yrange [min_temp:max_temp]
+# Get dynamic temperature values from files
+max_temp = real(system("cat /var/www/html/48h/temp.max"))
+min_temp = real(system("cat /var/www/html/48h/temp.min"))
+max_plus = int(( max_temp + 1 ))
+min_minus = int(( min_temp -1 ))
+set yrange [min_minus:max_plus]
 
 # Limit the number of ytics
 num_ytics = 4  # Maximum number of ytics
@@ -62,9 +64,16 @@ plot '/tmp/plot2.csv' using 1:($3 >= 0 ? $3 : NaN):xtic(2) with lines lc rgb "re
      '' using 1:($3 < 0 ? $3 : NaN) with lines lc rgb "blue" notitle, \
      '' using 1:($7 >= 0 ? NaN : $7) with lines lc rgb "#000088" notitle, \
      '' using 1:($7 < 0 ? NaN : $7) with lines lc rgb "#65398E" notitle, \
-     '' using 1:8 with lines lt 2 lc rgb "black" notitle, \
      '' using 1:(column(10) == 1 ? 8 : NaN) with lines lt 2 lc rgb "#444444" notitle, \
      '' using 1:(column(10) == 0 ? 8 : NaN) with lines lt 2 lc rgb "#777777" notitle
+
+#plot '/tmp/plot2.csv' using 1:($3 >= 0 ? $3 : NaN):xtic(2) with lines lc rgb "red" notitle, \
+#     '' using 1:($3 < 0 ? $3 : NaN) with lines lc rgb "blue" notitle, \
+#     '' using 1:($7 >= 0 ? NaN : $7) with lines lc rgb "#000088" notitle, \
+#     '' using 1:($7 < 0 ? NaN : $7) with lines lc rgb "#65398E" notitle, \
+#     '' using 1:8 with lines lt 2 lc rgb "black" notitle, \
+#     '' using 1:(column(10) == 1 ? 8 : NaN) with lines lt 2 lc rgb "#444444" notitle, \
+#     '' using 1:(column(10) == 0 ? 8 : NaN) with lines lt 2 lc rgb "#777777" notitle
 
 unset xtics
 unset ytics
