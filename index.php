@@ -126,6 +126,41 @@ $weather_icon = isset($current_conditions['icon']) ? $current_conditions['icon']
           </svg>
         </div>
       </div>
+      <div class="seven-day">
+        <?php
+        // Iterate through each day div (plus1 to plus7)
+        for ($i = 1; $i <= 7; $i++) {
+            $jsonFile = "daily/plus$i.json"; // Adjust path as per your setup
+
+            if (file_exists($jsonFile)) {
+                // Read JSON file
+                $jsonContents = file_get_contents($jsonFile);
+                $data = json_decode($jsonContents, true);
+
+                if ($data && isset($data['dt'], $data['icon'], $data['min'], $data['max'])) {
+                    // Extract data
+                    $timestamp = $data['dt'];
+                    $icon = $data['icon'];
+                    $minTemp = intval($data['min']);
+                    $maxTemp = intval($data['max']);
+
+                    // Convert epoch to abbreviated day name
+                    $dayOfWeek = date('D', $timestamp);
+
+                    // Construct weather icon path
+                    $iconPath = "img/weather/icon/$icon.svg"; // Adjust path as per your setup
+
+                    // Output HTML for this day
+                    echo '<div class="plus" id="plus'.$i.'">';
+                    echo '<div class="dayname" id="dayname'.$i.'">'.date('D', $timestamp).'</div>';
+                    echo '<div class="condition" id="condition'.$i.'"><center><img src="'.$iconPath.'" alt="Weather Icon"></center></div>';
+                    echo '<div class="min-max" id="min-max'.$i.'">'.$minTemp.' / '.$maxTemp.'</div>';
+                    echo '</div>';
+                }
+            }
+        }
+        ?>
+      </div>
     </div>
 
     <!-- Alert Container -->
