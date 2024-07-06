@@ -8,23 +8,75 @@
 LAT=""  # Latitude for the weather data
 LON=""  # Longitude for the weather data
 APP_ID=""  # Your OpenWeatherMap API key
-EXCLUDE="minutely,timezone,timezone_offset"  # Exclude unnecessary data categories
-DATESTAMP=$(date +%s)  # Current timestamp for unique file names
-FULL_FILE="/var/www/html/json/${DATESTAMP}_full.json"  # File to save the full API response
-CURRENTLY_FILE="/var/www/html/json/${DATESTAMP}_currently.json"  # File for current weather data
-HOURLY_FILE="/var/www/html/json/${DATESTAMP}_hourly.json"  # File for hourly weather data
-DAILY_FILE="/var/www/html/json/${DATESTAMP}_daily.json"  # File for daily weather data
+EXCLUDE="minutely,timezone,timezone_offset"
+DATESTAMP=$(date +%s)
+FULL_TEMP="/tmp/full.json"
+FULL_FILE="/var/www/html/json/${DATESTAMP}_full.json"
+CURRENTLY_FILE="/var/www/html/json/${DATESTAMP}_currently.json"
+HOURLY_FILE="/var/www/html/json/${DATESTAMP}_hourly.json"
+DAILY_FILE="/var/www/html/json/${DATESTAMP}_daily.json"
 
-# Fetch weather data from OpenWeatherMap API and save to full file
-curl -s "https://api.openweathermap.org/data/3.0/onecall?lat=${LAT}&lon=${LON}&exclude=${EXCLUDE}&units=metric&appid=${APP_ID}" -o "$FULL_FILE"
+curl -s "https://api.openweathermap.org/data/3.0/onecall?lat=${LAT}&lon=${LON}&exclude=${EXCLUDE}&units=metric&appid=${APP_ID}" -o "$FULL_TEMP" && \
+rm -f /var/www/html/json/*.json && \
+mv "$FULL_TEMP" "$FULL_FILE"
 
-# Extract current weather data and save to currently file
+ALERTS=$(jq '.alerts[].description' "$FULL_FILE" | sed 's/\\n/<br>/g' | sed 's/"//g')
+
+# Currently file
 jq '.current | {dt, sunrise, sunset, temp, pressure, humidity, dew_point, uvi, clouds, wind_speed, wind_deg, wind_gust, weather: .weather[0].icon}' "$FULL_FILE" > "$CURRENTLY_FILE"
 
-# Extract hourly weather data and save to hourly file
-jq '.hourly[] | {dt,temp,pressure,dew_point,uvi,clouds,wind_speed,wind_deg,rain,snow}' "$FULL_FILE" > "$HOURLY_FILE"
+FILE_CURRENT_WEATHER="/var/www/html/current/weather.txt"
+FILE_CURRENT_ICON="/var/www/html/current/icon.txt"
+FILE_CURRENT_WINDSPD="/var/www/html/current/windspd.txt"
+FILE_CURRENT_WINDDEG="/var/www/html/current/winddeg.txt"
+FILE_CURRENT_TEMP="/var/www/html/current/temp.txt"
+FILE_CURRENT_CLOUD="/var/www/html/current/cloud.txt"
+FILE_CURRENT_QNE="/var/www/html/current/qne.txt"
+FILE_CURRENT_DEW="/var/www/html/current/dew.txt"
+FILE_CURRENT_UVI="/var/www/html/current/uvi.txt"
+FILE_SUN_UP="/var/www/html/current/sun_up.txt"
+FILE_SUN_DN="/var/www/html/current/sun_dn.txt"
+FILE_CURRENT_HUMIDITY="/var/www/html/current/humidity.txt"
+FILE_ALERTS="/var/www/html/current/alerts.txt"
 
-# Extract specific data fields from the hourly file and save to temporary files
+# Renaming icon and Inserting weather
+sed -i 's/weather/icon/g' ${CURRENTLY_FILE}
+CURRENT_WEATHER=$(jq '.hourly[0].weather[].description' "$FULL_FILE" | sed 's/"//g' | sed 's/.*/\u&/')
+sed -i "/gust/a \  \"weather\": \"$CURRENT_WEATHER\"," "$CURRENTLY_FILE"
+
+CURRENT_ICON=$(jq '.icon' ${CURRENTLY_FILE})
+CURRENT_WINDSPD=$(jq '.wind_speed' ${CURRENTLY_FILE})
+CURRENT_WINDDEG=$(jq '.wind_deg' ${CURRENTLY_FILE})
+CURRENT_TEMP=$(jq '.temp' ${CURRENTLY_FILE})
+CURRENT_CLOUD=$(jq '.clouds' ${CURRENTLY_FILE})
+CURRENT_QNE=$(jq '.pressure' ${CURRENTLY_FILE})
+CURRENT_DEW=$(jq '.dew_point' ${CURRENTLY_FILE})
+CURRENT_UVI=$(jq '.uvi' ${CURRENTLY_FILE})
+SUN_UP=$(jq '.sunrise' ${CURRENTLY_FILE})
+SUN_DN=$(jq '.sunset' ${CURRENTLY_FILE})
+CURRENT_HUMIDITY=$(jq '.humidity' ${CURRENTLY_FILE})
+
+echo "$CURRENT_WEATHER" > "$FILE_CURRENT_WEATHER"
+echo "$CURRENT_ICON" > "$FILE_CURRENT_ICON"
+echo "$CURRENT_WINDSPD" > "$FILE_CURRENT_WINDSPD"
+echo "$CURRENT_WINDDEG" > "$FILE_CURRENT_WINDDEG"
+echo "$CURRENT_TEMP" > "$FILE_CURRENT_TEMP"
+echo "$CURRENT_CLOUD" > "$FILE_CURRENT_CLOUD"
+echo "$CURRENT_QNE" > "$FILE_CURRENT_QNE"
+echo "$CURRENT_DEW" > "$FILE_CURRENT_DEW"
+echo "$CURRENT_UVI" > "$FILE_CURRENT_UVI"
+echo "$SUN_UP" > "$FILE_SUN_UP"
+echo "$SUN_DN" > "$FILE_SUN_DN"
+echo "$CURRENT_HUMIDITY" > "$FILE_CURRENT_HUMIDITY"
+
+if [[ ! -z "$ALERTS" ]]; then
+  echo "$ALERTS" > "$FILE_ALERTS"
+else
+  rm "$FILE_ALERTS"
+fi
+
+# Hourly File
+jq '.hourly[] | {dt,temp,pressure,dew_point,uvi,clouds,wind_speed,wind_deg,rain,snow}' "$FULL_FILE" > "$HOURLY_FILE"
 jq '.dt' "$HOURLY_FILE" > /tmp/epoch.txt
 jq -r '.clouds' "$HOURLY_FILE" > /tmp/cloud_data.txt
 jq '.hourly[].temp' "$FULL_FILE" > /tmp/temp_data.txt
@@ -34,40 +86,26 @@ jq '.dew_point' "$HOURLY_FILE" > /tmp/dew_data.txt
 jq '.wind_speed' "$HOURLY_FILE" > /tmp/wnd_spd.txt
 jq '.wind_deg' "$HOURLY_FILE" > /tmp/wnd_deg.txt
 
-# Get the time values into the time data file
-for i in $(jq '.' "$HOURLY_FILE" | grep dt | awk '{print $2}' | rev | cut -c2- | rev); do 
-    date -d @$i +%H:%M 
-done > /tmp/time_data.txt
+# Save min/max temps in /var/www/html/48h/ as temp.min and temp.max
+jq '.hourly[].temp' "$FULL_FILE" | sort -n | tail -n1 > /var/www/html/48h/temp.max
+jq '.hourly[].temp' "$FULL_FILE" | sort -n | head -n1 > /var/www/html/48h/temp.min
 
-# Remove all the hours that aren't 0, 6, 12, 18 (dirty but effective)
-sed -i -e 's/01:00/ /g' /tmp/time_data.txt
-sed -i -e 's/02:00/ /g' /tmp/time_data.txt
-sed -i -e 's/03:00/ /g' /tmp/time_data.txt
-sed -i -e 's/04:00/ /g' /tmp/time_data.txt
-sed -i -e 's/05:00/ /g' /tmp/time_data.txt
-sed -i -e 's/07:00/ /g' /tmp/time_data.txt
-sed -i -e 's/08:00/ /g' /tmp/time_data.txt
-sed -i -e 's/09:00/ /g' /tmp/time_data.txt
-sed -i -e 's/10:00/ /g' /tmp/time_data.txt
-sed -i -e 's/11:00/ /g' /tmp/time_data.txt
-sed -i -e 's/13:00/ /g' /tmp/time_data.txt
-sed -i -e 's/14:00/ /g' /tmp/time_data.txt
-sed -i -e 's/15:00/ /g' /tmp/time_data.txt
-sed -i -e 's/16:00/ /g' /tmp/time_data.txt
-sed -i -e 's/17:00/ /g' /tmp/time_data.txt
-sed -i -e 's/19:00/ /g' /tmp/time_data.txt
-sed -i -e 's/20:00/ /g' /tmp/time_data.txt
-sed -i -e 's/21:00/ /g' /tmp/time_data.txt
-sed -i -e 's/22:00/ /g' /tmp/time_data.txt
-sed -i -e 's/23:00/ /g' /tmp/time_data.txt
 
-# Prepare a file indicating quarters (1 for quarters, 0 otherwise)
+# Daily File
+#to be added
+
+# get the time values into the times file
+for i in $(jq '.' "$HOURLY_FILE" | grep dt | awk '{print $2}' | rev | cut -c2- | rev); do date -d @$i +%H:%M; done > /tmp/time_data.txt
+
+# REMOVE ALL THE HOURS THAT AREN'T 0,6,12,18
+sed -i -E 's/(0[1-5]|0[7-9]|1[0-1]|1[3-7]|19|2[0-3]):00/ /g' /tmp/time_data.txt
+
+# for those lovely lovely vertical lines.
 cp /tmp/time_data.txt /tmp/quarter.txt
 sed -i -e 's/.*:00/1/g' /tmp/quarter.txt
 sed -i -e 's/^[[:blank:]]*$/0/g' /tmp/quarter.txt
 
-# Function to calculate the maximum rain value
-RAIN_MAX() {
+RAIN_MAX(){
   ABS_RAIN=$(sort -n /tmp/rain_data.txt | tail -n1)
 
   if (( $(echo "$ABS_RAIN > 0" | bc -l) )); then
@@ -83,8 +121,7 @@ RAIN_MAX() {
   fi
 }
 
-# Function to calculate the maximum snow value
-SNOW_MAX() {
+SNOW_MAX(){
   ABS_SNOW=$(sort -n /tmp/snow_data.txt | tail -n1)
 
   if (( $(echo "$ABS_SNOW > 0" | bc -l) )); then
@@ -100,11 +137,9 @@ SNOW_MAX() {
   fi
 }
 
-# Calculate maximum snow and rain values
 SNOW_MAX
 RAIN_MAX
 
-# Determine the maximum precipitation value
 if [[ $(( MAX_RAIN + MAX_SNOW )) -gt 0 ]]; then
   if [[ "$MAX_RAIN" -gt "$MAX_SNOW" ]]; then
     MAX_PRECIP="$MAX_RAIN"
@@ -118,11 +153,10 @@ else
 fi
 echo "$MAX_PRECIP" > /tmp/max_precip.txt
 
-# Calculate the maximum wind speed from plot2.csv
 awk -F, '$10 == 1 {if($8 > max) max=$8} END {print max}' /tmp/plot2.csv > /tmp/max_wind_speed.txt
 
-# Create the plot2.csv file with all required data fields
+# 1 EPOCH - 2 TIME - 3 TEMPERATURE - 4 RAIN - 5 SNOW - 6 CLOUD - 7 DEW - 8 WINDSPEED - 9 WINDDIRECTION - 10 QUARTER
 paste -d , /tmp/epoch.txt /tmp/time_data.txt /tmp/temp_data.txt /tmp/rain_data.txt /tmp/snow_data.txt /tmp/cloud_data.txt /tmp/dew_data.txt /tmp/wnd_spd.txt /tmp/wnd_deg.txt /tmp/quarter.txt > /tmp/plot2.csv
 
-# Run the Gnuplot script to generate the graph
+# Run Gnuplot script
 gnuplot /usr/local/bin/dashboard/graphs/graph.plot 2>/dev/null
