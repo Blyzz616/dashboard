@@ -32,8 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initial alert check
   fetchAlerts();
 
-  // Set interval to check for alert message every 5 minutes
-  setInterval(fetchAlerts, 300000); // Check every 5 minutes (300000 milliseconds)
+  // Set interval to check for alert message every 10 minutes
+  setInterval(fetchAlerts, 600000); // Check every 10 minutes (300000 milliseconds)
 });
 
 function updateClock() {
