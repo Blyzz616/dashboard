@@ -15,7 +15,7 @@ Currently looking like this:
 The circle at the bottom started out life as a day-light indicator.   
    The little sun would start the day on the left at sunrise, and work its little way over the top to the right and get there at sunset time.
 
-How though, It's got a weather icon in the middle, and it also grew up a little bit to become a circle. not just a semi-circle.
+Now though, It's got a weather icon in the middle, and it also grew up a little bit to become a circle. not just a semi-circle.
 
 There are 3 different calculations performed throughout the day:
 
@@ -34,7 +34,7 @@ There are 3 different calculations performed throughout the day:
 \{x, y\} = \{250 - 150 \cos\left(\frac{\pi}{100} \left(150 + \frac{z}{2}\right)\right), 200 - 150 \sin\left(\frac{\pi}{100} \left(150 + \frac{z}{2}\right)\right)\}
 ```
 
-This way the day time will go from sunrise to sunset at a constant speed for the top 180°. Then from sunet until midnigth at a constant speed for the next 90° and then midnight to sunrise for the last 90°.
+This way the day time will go from sunrise to sunset at a constant speed for the top 180°. Then from sunet until midnight at a constant speed for the next 90° and then midnight to sunrise for the last 90°.
 
 I split up the night as there may be slight changes in the timings with the data recieved from OpenWeatherMap's API.
 
