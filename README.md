@@ -65,4 +65,4 @@ To do:
 
 Damn, I got a lot to do on this!
 
-Thanks to [Ninad Munshi](https://math.stackexchange.com/users/698724/ninad-munshi) on [Github](https://math.stackexchange.com/questions/4934077/calculating-percentage-coordinates-on-an-arc) for giving me a push-start with regards to getting the calculations working!
+Thanks to [Ninad Munshi](https://math.stackexchange.com/users/698724/ninad-munshi) on [Github](https://math.stackexchange.com/questions/4934077/calculating-percentage-coordinates-on-an-arc) for giving me a push-start with regards to getting the calculations for the sun position working!
