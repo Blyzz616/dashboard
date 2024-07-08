@@ -110,19 +110,22 @@ $weather_icon = isset($current_conditions['icon']) ? $current_conditions['icon']
                 <rect x="0" y="0" width="500" height="250" fill="#ffffff" />
                 <rect x="0" y="200" width="500" height="250" fill="#777777" />
               </mask>
-              <mask id="icondim">
-                <rect x="175" y="125" width="180" height="180" fill="#777777" />
-              </mask>
             </defs>
-            <circle id="arc" cx="250" cy="200" r="150" fill="none" stroke="lightblue" stroke-width="8" mask="url(#dimmer)"></circle>
-            <circle id="sun" cx="250" cy="200" r="20" fill="orange" mask="url(#dimmer)"></circle>
 
-            <!-- Weather Icon dynamically added here -->
-            <image id="weather-icon" xlink:href="img/weather/icon/<?php echo $weather_icon; ?>.svg" width="200" height="200" x="150" y="100" />
+            <circle id="arc" cx="250" cy="200" r="150" fill="none" stroke="lightblue" stroke-width="8" mask="url(#dimmer)"></circle>
+            <circle id="sun" cx="250" cy="200" r="20" fill="orange"></circle>
+
             <line id="sunrise-line" x1="94" y1="201" x2="104" y2="201" style="stroke:black;stroke-width:1"></line>
             <line id="sunset-line" x1="396" y1="201" x2="404" y2="201" style="stroke:black;stroke-width:1"></line>
             <text id="sunrise-time" x="0" y="210" fill="#777777" font-size="2vw" data-timestamp="<?php echo $sunrise; ?>"><?php echo date('H:i', $sunrise); ?></text>
             <text id="sunset-time" x="430" y="210" fill="#777777" font-size="2vw" data-timestamp="<?php echo $sunset; ?>"><?php echo date('H:i', $sunset); ?></text>
+
+            <!-- Weather Icon dynamically added here -->
+            <image id="weather-icon" xlink:href="img/weather/icon/<?php echo $weather_icon; ?>.svg" width="200" height="200" x="150" y="100" />
+
+            <circle id="m_arc" cx="250" cy="200" r="110" fill="none" stroke="grey" stroke-width="6" mask="url(#dimmer)"></circle>
+            <circle id="moon" cx="250" cy="200" r="15" fill="lightgrey"></circle>
+
           </svg>
         </div>
       </div>
