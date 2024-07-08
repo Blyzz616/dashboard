@@ -14,6 +14,10 @@ Currently looking like this:
 Now with 7-day forecast!  
 ![image](https://github.com/Blyzz616/dashboard/assets/19424317/dc52c693-ccdf-4be0-863f-55d21e26ed5b)
 
+And now we've got the moon position!  
+![image](https://github.com/Blyzz616/dashboard/assets/19424317/cedc8ae6-ebb9-4f87-8257-aac85f15c69a)
+
+
 The circle at the bottom started out life as a day-light indicator.   
    The little sun would start the day on the left at sunrise, and work its little way over the top to the right and get there at sunset time.
 
@@ -66,6 +70,7 @@ To do:
 - [ ] Include stuff from Home Assistant?
 - [ ] Include stuff from Klipper? (3d Printer)
 - [ ] Include Network Monitoring SNMP/SIEM events?
+- [x] Moon Position
 
 Why is it ever time I mark something as complete, I add at least 2 more items?
 
