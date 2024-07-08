@@ -6,7 +6,7 @@ function displayAlert(message) {
 
   setTimeout(() => {
     alertContainer.style.display = 'none';
-  }, 45000); // Hide after 45 seconds
+  }, 60000); // Hide after 60 seconds
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -32,8 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initial alert check
   fetchAlerts();
 
-  // Set interval to check for alert message every 10 minutes
-  setInterval(fetchAlerts, 600000); // Check every 10 minutes (300000 milliseconds)
+  // Set interval to check for alert message every hour
+  setInterval(fetchAlerts, 3600000); // Check every hour (3600000 milliseconds)
 });
 
 function updateClock() {
@@ -84,6 +84,37 @@ function updateSunPosition(sunrise, sunset) {
   sun.setAttribute('cy', y);
 }
 
+function updateMoonPosition(moonrise, moonset) {
+  const moon = document.getElementById('moon');
+  const now = new Date().getTime();
+  const moonriseTime = new Date(moonrise).getTime();
+  const moonsetTime = new Date(moonset).getTime();
+  const nightDuration = moonsetTime - moonriseTime;
+  const elapsedTime = now - moonriseTime;
+
+  let x, y;
+
+  if (now >= moonriseTime && now <= moonsetTime) {
+    const z = (elapsedTime / nightDuration) * 100;
+    x = 250 - 110 * Math.cos(Math.PI * z / 100);
+    y = 200 - 110 * Math.sin(Math.PI * z / 100);
+  } else if (now > moonsetTime) {
+    const totalTime = (new Date().setHours(23, 59, 59, 999) - moonsetTime) / (1000 * 60); // Minutes
+    const currentTime = (now - moonsetTime) / (1000 * 60); // Minutes
+    const z = (currentTime / totalTime) * 100;
+    x = 250 - 110 * Math.cos(Math.PI * (100 + (z / 2)) / 100);
+    y = 200 - 110 * Math.sin(Math.PI * (100 + (z / 2)) / 100);
+  } else {
+    const totalTime = (moonriseTime - new Date().setHours(0, 0, 0, 0)) / (1000 * 60); // Minutes
+    const currentTime = (now - new Date().setHours(0, 0, 0, 0)) / (1000 * 60); // Minutes
+    const z = (currentTime / totalTime) * 100;
+    x = 250 - 110 * Math.cos(Math.PI * (150 + (z / 2)) / 100);
+    y = 200 - 110 * Math.sin(Math.PI * (150 + (z / 2)) / 100);
+  }
+  moon.setAttribute('cx', x);
+  moon.setAttribute('cy', y);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   updateClock();
   setInterval(updateClock, 1000);
@@ -96,15 +127,35 @@ document.addEventListener('DOMContentLoaded', () => {
   const sunriseDate = new Date(sunriseTimestamp);
   const sunsetDate = new Date(sunsetTimestamp);
 
-  const sunriseLocalTime = sunriseDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false , timeZone: 'America/Vancouver' });
-  const sunsetLocalTime = sunsetDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false , timeZone: 'America/Vancouver' });
+  // These are the time labels for sunrise and sunset
+  const sunriseLocalTime = sunriseDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'America/Vancouver' });
+  const sunsetLocalTime = sunsetDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'America/Vancouver' });
 
   document.getElementById('sunrise-time').textContent = sunriseLocalTime;
   document.getElementById('sunset-time').textContent = sunsetLocalTime;
 
-  // Update sun position initially and every minute
-  updateSunPosition(sunriseTimestamp, sunsetTimestamp);
-  setInterval(() => {
-    updateSunPosition(sunriseTimestamp, sunsetTimestamp);
-  }, 60000); // Update sun position every minute
+  // Fetch moonrise and moonset times from files
+  fetch('../current/moonup.txt')
+    .then(response => response.text())
+    .then(moonriseTimestamp => {
+      const moonriseDate = new Date(parseInt(moonriseTimestamp, 10) * 1000);
+
+      fetch('../current/moondn.txt')
+        .then(response => response.text())
+        .then(moonsetTimestamp => {
+          const moonsetDate = new Date(parseInt(moonsetTimestamp, 10) * 1000);
+
+          // Update sun position initially and every minute
+          updateSunPosition(sunriseTimestamp, sunsetTimestamp);
+          setInterval(() => {
+            updateSunPosition(sunriseTimestamp, sunsetTimestamp);
+          }, 60000); // Update sun position every minute
+
+          // Update moon position initially and every minute
+          updateMoonPosition(moonriseDate, moonsetDate);
+          setInterval(() => {
+            updateMoonPosition(moonriseDate, moonsetDate);
+          }, 60000); // Update moon position every minute
+        });
+    });
 });
