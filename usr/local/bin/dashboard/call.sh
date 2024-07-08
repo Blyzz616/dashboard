@@ -38,22 +38,27 @@ FILE_SUN_UP="/var/www/html/current/sun_up.txt"
 FILE_SUN_DN="/var/www/html/current/sun_dn.txt"
 FILE_CURRENT_HUMIDITY="/var/www/html/current/humidity.txt"
 FILE_ALERTS="/var/www/html/current/alerts.txt"
+FILE_MOON_UP="/var/www/html/current/moonup.txt"
+FILE_MOON_DN="/var/www/html/current/moondn.txt"
 
 # Renaming icon and Inserting weather
 sed -i 's/weather/icon/g' ${CURRENTLY_FILE}
 CURRENT_WEATHER=$(jq '.hourly[0].weather[].description' "$FULL_FILE" | sed 's/"//g' | sed 's/.*/\u&/')
 sed -i "/gust/a \  \"weather\": \"$CURRENT_WEATHER\"," "$CURRENTLY_FILE"
 
-CURRENT_ICON=$(jq '.icon' ${CURRENTLY_FILE})
-CURRENT_WINDSPD=$(jq '.wind_speed' ${CURRENTLY_FILE})
-CURRENT_WINDDEG=$(jq '.wind_deg' ${CURRENTLY_FILE})
-CURRENT_TEMP=$(jq '.temp' ${CURRENTLY_FILE})
-CURRENT_CLOUD=$(jq '.clouds' ${CURRENTLY_FILE})
-CURRENT_QNE=$(jq '.pressure' ${CURRENTLY_FILE})
-CURRENT_DEW=$(jq '.dew_point' ${CURRENTLY_FILE})
-CURRENT_UVI=$(jq '.uvi' ${CURRENTLY_FILE})
-SUN_UP=$(jq '.sunrise' ${CURRENTLY_FILE})
-SUN_DN=$(jq '.sunset' ${CURRENTLY_FILE})
+CURRENT_ICON=$(jq '.icon' "$CURRENTLY_FILE")
+CURRENT_WINDSPD=$(jq '.wind_speed' "$CURRENTLY_FILE")
+CURRENT_WINDDEG=$(jq '.wind_deg' "$CURRENTLY_FILE")
+CURRENT_TEMP=$(jq '.temp' "$CURRENTLY_FILE")
+CURRENT_CLOUD=$(jq '.clouds' "$CURRENTLY_FILE")
+CURRENT_QNE=$(jq '.pressure' "$CURRENTLY_FILE")
+CURRENT_DEW=$(jq '.dew_point' "$CURRENTLY_FILE")
+CURRENT_UVI=$(jq '.uvi' "$CURRENTLY_FILE")
+SUN_UP=$(jq '.sunrise' "$CURRENTLY_FILE")
+SUN_DN=$(jq '.sunset' "$CURRENTLY_FILE")
+MOON_UP=$(jq '.daily[0].moonrise' "$FULL_FILE")
+MOON_DN=$(jq '.daily[0].moonset' "$FULL_FILE")
+
 CURRENT_HUMIDITY=$(jq '.humidity' ${CURRENTLY_FILE})
 
 echo "$CURRENT_WEATHER" > "$FILE_CURRENT_WEATHER"
@@ -67,6 +72,8 @@ echo "$CURRENT_DEW" > "$FILE_CURRENT_DEW"
 echo "$CURRENT_UVI" > "$FILE_CURRENT_UVI"
 echo "$SUN_UP" > "$FILE_SUN_UP"
 echo "$SUN_DN" > "$FILE_SUN_DN"
+echo "$MOON_UP" > "$FILE_MOON_UP"
+echo "$MOON_DN" > "$FILE_MOON_DN"
 echo "$CURRENT_HUMIDITY" > "$FILE_CURRENT_HUMIDITY"
 
 if [[ ! -z "$ALERTS" ]]; then
@@ -92,7 +99,14 @@ jq '.hourly[].temp' "$FULL_FILE" | sort -n | head -n1 > /var/www/html/48h/temp.m
 
 
 # Daily File
-#to be added
+jq '.daily' "$FULL_FILE" > "$DAILY_FILE"
+jq '.daily[1] | {dt, summary, min: .temp.min, max: .temp.max, icon: .weather[0].icon, clouds, pop, uvi}' "$FULL_FILE" > /var/www/html/daily/plus1.json
+jq '.daily[2] | {dt, summary, min: .temp.min, max: .temp.max, icon: .weather[0].icon, clouds, pop, uvi}' "$FULL_FILE" > /var/www/html/daily/plus2.json
+jq '.daily[3] | {dt, summary, min: .temp.min, max: .temp.max, icon: .weather[0].icon, clouds, pop, uvi}' "$FULL_FILE" > /var/www/html/daily/plus3.json
+jq '.daily[4] | {dt, summary, min: .temp.min, max: .temp.max, icon: .weather[0].icon, clouds, pop, uvi}' "$FULL_FILE" > /var/www/html/daily/plus4.json
+jq '.daily[5] | {dt, summary, min: .temp.min, max: .temp.max, icon: .weather[0].icon, clouds, pop, uvi}' "$FULL_FILE" > /var/www/html/daily/plus5.json
+jq '.daily[6] | {dt, summary, min: .temp.min, max: .temp.max, icon: .weather[0].icon, clouds, pop, uvi}' "$FULL_FILE" > /var/www/html/daily/plus6.json
+jq '.daily[7] | {dt, summary, min: .temp.min, max: .temp.max, icon: .weather[0].icon, clouds, pop, uvi}' "$FULL_FILE" > /var/www/html/daily/plus7.json
 
 # get the time values into the times file
 for i in $(jq '.' "$HOURLY_FILE" | grep dt | awk '{print $2}' | rev | cut -c2- | rev); do date -d @$i +%H:%M; done > /tmp/time_data.txt
