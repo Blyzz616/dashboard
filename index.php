@@ -64,18 +64,22 @@ $weather_icon = isset($current_conditions['icon']) ? $current_conditions['icon']
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard</title>
   <link rel="stylesheet" href="css/main.css">
+  <link rel="icon" type="image/x-icon" href="img/favicon.ico">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="refresh" content="21600"> <!-- 6 hours in seconds -->
 </head>
 <body>
   <div class="dashboard">
     <div class="top-row">
-
       <!-- Left Column for weather information -->
       <div class="left-column">
+      <div class="date"><em>
+        <?php echo date("D, M j, Y"); ?></em>
+      </div>
         <div class="weather-container">
-          <div id="weather">Temp: <?php echo $temp; ?>°C, <?php echo $description; ?></div>
+          <div id="temp"><?php $formatted_temp = number_format($temp, 1); echo $formatted_temp; ?> &deg;C</div>
           <div id="additional-info">
+            <div id="weather"><?php echo $description; ?></div>
             <ul>
               <li>Humidity: <span id="humidity"><?php echo $humidity; ?></span>%</li>
               <li>Wind Speed: <span id="wind-speed"><?php echo $wind_speed; ?></span> m/s</li>
@@ -117,14 +121,15 @@ $weather_icon = isset($current_conditions['icon']) ? $current_conditions['icon']
 
             <line id="sunrise-line" x1="94" y1="201" x2="104" y2="201" style="stroke:black;stroke-width:1"></line>
             <line id="sunset-line" x1="396" y1="201" x2="404" y2="201" style="stroke:black;stroke-width:1"></line>
-            <text id="sunrise-time" x="0" y="210" fill="#777777" font-size="2vw" data-timestamp="<?php echo $sunrise; ?>"><?php echo date('H:i', $sunrise); ?></text>
-            <text id="sunset-time" x="430" y="210" fill="#777777" font-size="2vw" data-timestamp="<?php echo $sunset; ?>"><?php echo date('H:i', $sunset); ?></text>
 
             <!-- Weather Icon dynamically added here -->
             <image id="weather-icon" xlink:href="img/weather/icon/<?php echo $weather_icon; ?>.svg" width="200" height="200" x="150" y="100" />
 
             <circle id="m_arc" cx="250" cy="200" r="110" fill="none" stroke="grey" stroke-width="6" mask="url(#dimmer)"></circle>
             <circle id="moon" cx="250" cy="200" r="15" fill="lightgrey"></circle>
+            <!--<rect width="500" height="200" x="0" y="200" fill-opacity="0.5" fill="black" />-->
+            <text id="sunrise-time" x="0" y="210" fill="#777777" font-size="2vw" data-timestamp="<?php echo $sunrise; ?>"><?php echo date('H:i', $sunrise); ?></text>
+            <text id="sunset-time" x="430" y="210" fill="#777777" font-size="2vw" data-timestamp="<?php echo $sunset; ?>"><?php echo date('H:i', $sunset); ?></text>
 
           </svg>
         </div>
