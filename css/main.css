@@ -29,7 +29,7 @@ body {
 .top-row {
   display: flex;
   width: 100%;
-  height: 30%;
+  height: 35%;
   margin-bottom: 10px; /* Adjust spacing */
 }
 
@@ -39,7 +39,13 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding-left: 6vw;
+  padding-left: 1vw;
+  /*background*/
+}
+
+.date {
+  margin-bottom: 20px;
+  font-size: 3em;
 }
 
 .right-column {
@@ -51,10 +57,26 @@ body {
 
 .weather-container {
   width: 100%;
+  display: flex;
 }
 
-#weather, #additional-info {
+#additional-info {
+  margin-top: 20px;
+  width: 40%;
+  font-size: 1em;
+}
+
+#weather {
   font-size: 2em;
+  text-align: leftt;
+  flex-direction: column;
+}
+
+#temp {
+  width: 60%;
+  margin-top: 20px;
+  font-size: 5em;
+  text-align: left;
 }
 
 #weather-icon {
@@ -95,7 +117,7 @@ body {
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 30%;
+  height: 35%;
   margin: 10px 0;
 }
 
@@ -118,6 +140,85 @@ body {
   z-index: 1000;
   display: none; /* Initially hidden */
 }
+
+.seven-day{
+  position: absolute;
+  bottom: 0px;
+  right: -200px;
+  display: flex;
+  flex-direction: row;
+  width: 1008px;
+  height: 200px;
+}
+
+.dayname{
+  width: 100%;
+  text-align: center;
+}
+
+.condition{
+  width: 100%;
+}
+
+.min-max{
+  width: 100%;
+  text-align: center;
+}
+
+.plus{
+  margin: 5px;
+  width: 100px;
+}
+
+#plus1{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#plus2{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#plus3{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#plus4{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#plus5{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#plus6{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#plus7{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 
 #sun-container {
   /* display: none;  Hide initially */
