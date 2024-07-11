@@ -9,32 +9,37 @@ function displayAlert(message) {
   }, 60000); // Hide after 60 seconds
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  // Function to fetch alerts from server
-  function fetchAlerts() {
-    fetch('../current/alerts.txt')
-      .then(response => {
-        if (!response.ok) {
+// Function to fetch alerts from server
+function fetchAlerts() {
+  fetch('../current/alerts.txt')
+    .then(response => {
+      if (!response.ok) {
+        if (response.status !== 404) { // Check if it's not a "Not Found" error
           throw new Error('Network response was not ok');
         }
-        return response.text();
-      })
-      .then(alertMessage => {
-        if (alertMessage.trim().length > 0) {
-          displayAlert(alertMessage.trim());
-        }
-      })
-      .catch(error => {
+        // If it's a 404 error (Not Found), just return an empty string
+        return '';
+      }
+      return response.text();
+    })
+    .then(alertMessage => {
+      if (alertMessage.trim().length > 0) {
+        displayAlert(alertMessage.trim());
+      }
+    })
+    .catch(error => {
+      // Only log the error if it's not a 404 error
+      if (error.message !== 'Network response was not ok') {
         console.error('Error fetching alerts:', error);
-      });
-  }
+      }
+    });
+}
 
-  // Initial alert check
-  fetchAlerts();
+// Initial alert check
+fetchAlerts();
 
-  // Set interval to check for alert message every hour
-  setInterval(fetchAlerts, 3600000); // Check every hour (3600000 milliseconds)
-});
+// Set interval to check for alert message every hour
+setInterval(fetchAlerts, 3600000); // Check every hour (3600000 milliseconds)
 
 function updateClock() {
   const now = new Date();
@@ -115,6 +120,23 @@ function updateMoonPosition(moonrise, moonset) {
   moon.setAttribute('cy', y);
 }
 
+function fetchTemperatureAndUpdate() {
+  fetch('../current/temp.txt')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.text();
+    })
+    .then(temp => {
+      const formattedTemp = parseFloat(temp).toFixed(1);
+      document.getElementById('temp').textContent = `${formattedTemp} °C`;
+    })
+    .catch(error => {
+      console.error('Error fetching temperature:', error);
+    });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   updateClock();
   setInterval(updateClock, 1000);
@@ -158,4 +180,8 @@ document.addEventListener('DOMContentLoaded', () => {
           }, 60000); // Update moon position every minute
         });
     });
+
+  // Fetch temperature initially and every 5 minutes
+  fetchTemperatureAndUpdate();
+  setInterval(fetchTemperatureAndUpdate, 300000); // Fetch temperature every 5 minutes (300000 milliseconds)
 });
