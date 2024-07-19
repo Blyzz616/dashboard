@@ -16,9 +16,7 @@ Now with 7-day forecast and moon position!
 
 Also - you just gotta love these icons!
 
-![Sunny](/img/weather/icon/01d.svg)  
-![cloudy](/img/weather/icon/03d.svg)  
-![Rainy](/img/weather/icon/10d.svg)  
+![Sunny](/img/weather/icon/01d.svg)  ![cloudy](/img/weather/icon/03d.svg)  ![Rainy](/img/weather/icon/10d.svg)  
 
 The circle at the bottom started out life as a day-light indicator.   
    The little sun would start the day on the left at sunrise, and work its little way over the top to the right and get there at sunset time.
