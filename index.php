@@ -51,9 +51,22 @@ $temp = isset($current_conditions['temp']) ? $current_conditions['temp'] : 'N/A'
 $description = isset($current_conditions['weather']) ? $current_conditions['weather'] : 'N/A';
 $humidity = isset($current_conditions['humidity']) ? $current_conditions['humidity'] : 'N/A';
 $wind_speed = isset($current_conditions['wind_speed']) ? $current_conditions['wind_speed'] : 'N/A';
+$wind_deg = isset($current_conditions['wind_deg']) ? $current_conditions['wind_deg'] : 'N/A';
+$uvi = isset($current_conditions['uvi']) ? $current_conditions['uvi'] : 'N/A';
+$pressure = isset($current_conditions['pressure']) ? $current_conditions['pressure'] : 'N/A';
 $sunrise = isset($current_conditions['sunrise']) ? $current_conditions['sunrise'] : 'N/A';
 $sunset = isset($current_conditions['sunset']) ? $current_conditions['sunset'] : 'N/A';
 $weather_icon = isset($current_conditions['icon']) ? $current_conditions['icon'] : 'N/A';
+
+function getUviClass($uvi) {
+    if ($uvi < 3) return 'uvi-low';
+    if ($uvi < 6) return 'uvi-moderate';
+    if ($uvi < 8) return 'uvi-high';
+    if ($uvi < 11) return 'uvi-very-high';
+    return 'uvi-extreme';
+}
+
+$uvi_class = getUviClass($uvi);
 
 // Output HTML content
 ?>
@@ -77,12 +90,14 @@ $weather_icon = isset($current_conditions['icon']) ? $current_conditions['icon']
         <?php echo date("D, M j, Y"); ?></em>
       </div>
         <div class="weather-container">
-          <div id="temp"><?php $formatted_temp = number_format($temp, 1); echo $formatted_temp; ?> &deg;C</div>
+          <div id="temp"><?php $formatted_temp = number_format($temp, 1); echo $formatted_temp; ?>&deg;</div>
           <div id="additional-info">
             <div id="weather"><?php echo $description; ?></div>
             <ul>
               <li>Humidity: <span id="humidity"><?php echo $humidity; ?></span>%</li>
-              <li>Wind Speed: <span id="wind-speed"><?php echo $wind_speed; ?></span> m/s</li>
+              <li>Wind: <span id="wind-speed"><?php echo $wind_speed; ?></span> m/s <?php echo $wind_deg; ?></li>
+              <li>UVI: <span id="uvi" class="<?php echo $uvi_class; ?>"><?php  $formatted_uvi = number_format($uvi, 1); echo $formatted_uvi; ?></span></li>
+              <li>Pressure: <span id="pressure"><?php echo $pressure; ?> hPa</span>%</li>
             </ul>
           </div>
         </div>
@@ -91,7 +106,7 @@ $weather_icon = isset($current_conditions['icon']) ? $current_conditions['icon']
       <!-- Right column for forecast -->
       <div class="right-column">
         <div class="forecast-container">
-          <object type="image/svg+xml" data="../img/forecast.svg" width="100%" height="auto"></object>
+          <object id="forecast-image" type="image/svg+xml" data="../img/forecast.svg" width="100%" height="auto"></object>
         </div>
       </div>
     </div>
@@ -105,10 +120,9 @@ $weather_icon = isset($current_conditions['icon']) ? $current_conditions['icon']
 
     <!-- Other information container -->
     <div class="other-info-container">
-      <div id="other-info"></div>
       <div class="bottom-left">
         <div id="sun-container" style="display: block;">
-          <svg width="500" height="400" viewbox="0 0 1000 800">
+          <svg height="280" viewbox="0 0 500 500">
             <defs>
               <mask id="dimmer">
                 <rect x="0" y="0" width="500" height="250" fill="#ffffff" />
@@ -161,7 +175,7 @@ $weather_icon = isset($current_conditions['icon']) ? $current_conditions['icon']
                     // Output HTML for this day
                     echo '<div class="plus" id="plus'.$i.'">';
                     echo '<div class="dayname" id="dayname'.$i.'">'.date('D', $timestamp).'</div>';
-                    echo '<div class="condition" id="condition'.$i.'"><center><img src="'.$iconPath.'" alt="Weather Icon"></center></div>';
+                    echo '<div class="condition" id="condition'.$i.'"><center><img src="'.$iconPath.'" class="condition-size" alt="Weather Icon"></center></div>';
                     echo '<div class="min-max" id="min-max'.$i.'">'.$minTemp.' / '.$maxTemp.'</div>';
                     echo '</div>';
                 }
