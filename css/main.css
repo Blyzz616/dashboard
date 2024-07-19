@@ -68,15 +68,35 @@ body {
 
 #weather {
   font-size: 2em;
-  text-align: leftt;
+  text-align: center;
   flex-direction: column;
 }
 
 #temp {
   width: 60%;
   margin-top: 20px;
-  font-size: 5em;
-  text-align: left;
+  font-size: 7.5em;
+  text-align: center;
+}
+
+.uvi-low {
+  color: #47ac2c;
+}
+
+.uvi-moderate {
+  color: #f7ef08;
+}
+
+.uvi-high {
+  color: #f58800;
+}
+
+.uvi-very-high {
+  color: #ef3215;
+}
+
+.uvi-extreme {
+  color: #c36ca3;
 }
 
 #weather-icon {
@@ -97,7 +117,7 @@ body {
   display: block; /* Ensure it behaves as a block element */
 }
 
-.clock-container, .other-info-container {
+.clock-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -143,21 +163,28 @@ body {
 
 .seven-day{
   position: absolute;
-  bottom: 0px;
-  right: -200px;
+/*  right: 0px;*/
   display: flex;
   flex-direction: row;
-  width: 1008px;
-  height: 200px;
+margin: 0 0 0 25%;
+/*  height: 200px;*/
 }
 
 .dayname{
   width: 100%;
   text-align: center;
+  font-variant: petite-caps;
+  font-weight: 600;
+  font-size: x-large;
 }
 
 .condition{
   width: 100%;
+}
+
+.condition-size {
+  width: 100px;
+  height: 100px;
 }
 
 .min-max{
@@ -168,57 +195,11 @@ body {
 .plus{
   margin: 5px;
   width: 100px;
-}
-
-#plus1{
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
-
-#plus2{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-#plus3{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-#plus4{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-#plus5{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-#plus6{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-#plus7{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
 
 #sun-container {
   /* display: none;  Hide initially */
