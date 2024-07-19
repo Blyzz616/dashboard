@@ -9,7 +9,8 @@ However, I've got a few ESP32 boards that need to be put into service to report 
 Right now though, I'm just warming up!
 
 Currently looking like this:  
-![image](https://github.com/Blyzz616/dashboard/assets/19424317/e2f5f95c-8c21-43eb-884e-ca5d67de6720)
+![image](https://github.com/user-attachments/assets/9774651f-93a6-4b71-a18d-803b4d2434e8)
+
 
 Now with 7-day forecast and moon position!
 
@@ -57,9 +58,9 @@ To do:
   - [x] Cloud Cover Bar (top Y)
 - [x] Disaplay alerts for 45 seconds every 5 minutes
 - [x] 7-day weather forecast
-   - [ ] Add UVI
+   - [x] Add UVI
    - [ ] Add Probability of Precip
-- [ ] Windspeed and direction
+- [x] Windspeed and direction
 - [ ] Include predicted vs actual temperatures
 - [ ] include temperatures from
   - [ ] Garage
