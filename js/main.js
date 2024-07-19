@@ -1,4 +1,4 @@
-// Function to display alert div for 1 minute every 5 minutes
+// Function to display alert div for 1 minute every hour
 function displayAlert(message) {
   const alertContainer = document.getElementById('alert-container');
   alertContainer.innerHTML = message;
@@ -7,6 +7,12 @@ function displayAlert(message) {
   setTimeout(() => {
     alertContainer.style.display = 'none';
   }, 60000); // Hide after 60 seconds
+}
+
+function updateForecastImage() {
+  const forecastImage = document.getElementById('forecast-image');
+  const newData = `../img/forecast.svg?${new Date().getTime()}`; // Cache-busting by appending the current timestamp
+  forecastImage.setAttribute('data', newData);
 }
 
 // Function to fetch alerts from server
@@ -130,7 +136,7 @@ function fetchTemperatureAndUpdate() {
     })
     .then(temp => {
       const formattedTemp = parseFloat(temp).toFixed(1);
-      document.getElementById('temp').textContent = `${formattedTemp} °C`;
+      document.getElementById('temp').textContent = `${formattedTemp}°`;
     })
     .catch(error => {
       console.error('Error fetching temperature:', error);
@@ -184,4 +190,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Fetch temperature initially and every 5 minutes
   fetchTemperatureAndUpdate();
   setInterval(fetchTemperatureAndUpdate, 300000); // Fetch temperature every 5 minutes (300000 milliseconds)
+
+  // Update the forecast image every 5 minutes
+  setInterval(updateForecastImage, 300000); // 300000 milliseconds = 5 minutes
+
 });
