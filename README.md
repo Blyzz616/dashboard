@@ -9,7 +9,8 @@ However, I've got a few ESP32 boards that need to be put into service to report 
 Right now though, I'm just warming up!
 
 Currently looking like this:  
-![image](https://github.com/user-attachments/assets/9774651f-93a6-4b71-a18d-803b4d2434e8)
+![image](https://github.com/user-attachments/assets/cffe8a50-c180-4f9b-bdad-df383aa619f4)
+
 
 
 Now with 7-day forecast and moon position!
