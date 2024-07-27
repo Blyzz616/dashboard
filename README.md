@@ -76,6 +76,7 @@ To do:
 - [ ] Include stuff from Klipper? (3d Printer)
 - [ ] Include Network Monitoring SNMP/SIEM events?
 - [x] Moon Position
+- [x] Moon Phase
 - [X] Update Temperature with JS
 
 Why is it ever time I mark something as complete, I add at least 2 more items?
