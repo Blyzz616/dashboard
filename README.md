@@ -78,6 +78,7 @@ To do:
 - [ ] Include Network Monitoring SNMP/SIEM events?
 - [x] Moon Position
 - [x] Moon Phase
+- [ ] fix phase to be moon's shadow - not earth's!
 - [X] Update Temperature with JS
 
 Why is it ever time I mark something as complete, I add at least 2 more items?
