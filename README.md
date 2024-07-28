@@ -11,18 +11,19 @@ Right now though, I'm just warming up!
 Currently looking like this:  
 ![image](https://github.com/user-attachments/assets/cffe8a50-c180-4f9b-bdad-df383aa619f4)
 
-
-
 Now with 7-day forecast and moon position!
 
 Also - you just gotta love these icons!
 
 ![Sunny](/img/weather/icon/01d.svg)  ![cloudy](/img/weather/icon/03d.svg)  ![Rainy](/img/weather/icon/10d.svg)  
 
+
+I've jsut added the moon phase indicator - And I'm wondering if I should use it as the tiny little moon guy in the sun/moon position indicator on the left too.
+
 The circle at the bottom started out life as a day-light indicator.   
    The little sun would start the day on the left at sunrise, and work its little way over the top to the right and get there at sunset time.
 
-Now though, It's got a weather icon in the middle, and it also grew up a little bit to become a circle. not just a semi-circle.
+Now though, It's got a weather icon in the middle, and it also grew up a little bit to become a circle. not just a semi-circle
 
 There are 3 different calculations performed throughout the day:
 
