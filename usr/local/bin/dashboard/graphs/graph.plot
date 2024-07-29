@@ -32,7 +32,7 @@ set style fill solid 0.5 noborder
 set datafile separator ","
 #set boxwidth 0.9
 
-# Plot bars from data file (assuming column 6 is cloud cover data)
+# Plot cloud bars from data file
 plot '/tmp/plot2.csv' using 1:6 with boxes lc rgb "#E3FBFF" notitle
 unset yrange
 
@@ -50,30 +50,37 @@ set xtics scale 0
 # Get dynamic temperature values from files
 max_temp = real(system("cat /var/www/html/48h/temp.max"))
 min_temp = real(system("cat /var/www/html/48h/temp.min"))
+max_precip = real(system("cat /tmp/max_precip.txt"))
 max_plus = int(( max_temp + 1 ))
 min_minus = int(( min_temp -1 ))
 set yrange [min_minus:max_plus]
+set y2range [0:max_precip]
+
+# Conditional y2tics
+if (max_precip > 0) {
+    set y2tics (0, max_precip)
+    set y2tics out
+    set y2tics nomirror
+    set y2tics textcolor rgb "blue"
+} else {
+    unset y2tics
+}
 
 # Limit the number of ytics
 num_ytics = 4  # Maximum number of ytics
 tic_interval = int((max_temp - min_temp) / (num_ytics - 1))
 set ytics min_temp, tic_interval, max_temp format "%.0f"
 
+set datafile separator ","
+set style fill solid 0.7 noborder
+
 # Plot temperature (with conditional color based on freezing point)
 plot '/tmp/plot2.csv' using 1:($3 >= 0 ? $3 : NaN):xtic(2) with lines lc rgb "red" notitle, \
+     '' using 1:4 axes x1y2 with boxes lc rgb "blue" notitle, \
+     '' using 1:($3 >= 0 ? $3 : NaN):xtic(2) with lines lc rgb "red" notitle, \
      '' using 1:($3 < 0 ? $3 : NaN) with lines lc rgb "blue" notitle, \
      '' using 1:($7 >= 0 ? NaN : $7) with lines lc rgb "#000088" notitle, \
-     '' using 1:($7 < 0 ? NaN : $7) with lines lc rgb "#65398E" notitle, \
-     '' using 1:(column(10) == 1 ? 8 : NaN) with lines lt 2 lc rgb "#444444" notitle, \
-     '' using 1:(column(10) == 0 ? 8 : NaN) with lines lt 2 lc rgb "#777777" notitle
-
-#plot '/tmp/plot2.csv' using 1:($3 >= 0 ? $3 : NaN):xtic(2) with lines lc rgb "red" notitle, \
-#     '' using 1:($3 < 0 ? $3 : NaN) with lines lc rgb "blue" notitle, \
-#     '' using 1:($7 >= 0 ? NaN : $7) with lines lc rgb "#000088" notitle, \
-#     '' using 1:($7 < 0 ? NaN : $7) with lines lc rgb "#65398E" notitle, \
-#     '' using 1:8 with lines lt 2 lc rgb "black" notitle, \
-#     '' using 1:(column(10) == 1 ? 8 : NaN) with lines lt 2 lc rgb "#444444" notitle, \
-#     '' using 1:(column(10) == 0 ? 8 : NaN) with lines lt 2 lc rgb "#777777" notitle
+     '' using 1:($7 < 0 ? NaN : $7) with lines lc rgb "#65398E" notitle
 
 unset xtics
 unset ytics
