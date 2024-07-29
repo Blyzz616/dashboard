@@ -37,7 +37,7 @@ Basing this on my e-paper desk clock that I've been using for the last few years
    \{x, y\} = \{250 - 150 \cos\left(\frac{\pi z}{100}\right), 200 - 150 \sin\left(\frac{\pi z}{100}\right)\}
 ```
 
-2. EVening Calculation - Sunset to Midnight:
+2. Evening Calculation - Sunset to Midnight:
 ```math
 \{x, y\} = \{250 - 150 \cos\left(\frac{\pi}{100} \left(100 + \frac{z}{2}\right)\right), 200 - 150 \sin\left(\frac{\pi}{100} \left(100 + \frac{z}{2}\right)\right)\}
 ```
