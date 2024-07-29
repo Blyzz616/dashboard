@@ -11,16 +11,16 @@ APP_ID=""  # Your OpenWeatherMap API key
 EXCLUDE="minutely,timezone,timezone_offset"
 DATESTAMP=$(date +%s)
 FULL_TEMP="/tmp/full.json"
-FULL_FILE="/var/www/html/json/${DATESTAMP}_full.json"
-CURRENTLY_FILE="/var/www/html/json/${DATESTAMP}_currently.json"
-HOURLY_FILE="/var/www/html/json/${DATESTAMP}_hourly.json"
-DAILY_FILE="/var/www/html/json/${DATESTAMP}_daily.json"
+FULL_FILE="/var/www/html/json/full.json"
+CURRENTLY_FILE="/var/www/html/json/currently.json"
+HOURLY_FILE="/var/www/html/json/hourly.json"
+DAILY_FILE="/var/www/html/json/daily.json"
 
 curl -s "https://api.openweathermap.org/data/3.0/onecall?lat=${LAT}&lon=${LON}&exclude=${EXCLUDE}&units=metric&appid=${APP_ID}" -o "$FULL_TEMP" && \
 rm -f /var/www/html/json/*.json && \
 mv "$FULL_TEMP" "$FULL_FILE"
 
-ALERTS=$(jq '.alerts[].description' "$FULL_FILE" | sed 's/\\n/<br>/g' | sed 's/"//g')
+ALERTS=$(jq -r '.alerts[]? | .description //empty' "$FULL_FILE" | sed 's/\\n/<br>/g' | sed 's/"//g' 2>/dev/null) || unset ALERTS
 
 # Currently file
 jq '.current | {dt, sunrise, sunset, temp, pressure, humidity, dew_point, uvi, clouds, wind_speed, wind_deg, wind_gust, weather: .weather[0].icon}' "$FULL_FILE" > "$CURRENTLY_FILE"
@@ -40,12 +40,14 @@ FILE_CURRENT_HUMIDITY="/var/www/html/current/humidity.txt"
 FILE_ALERTS="/var/www/html/current/alerts.txt"
 FILE_MOON_UP="/var/www/html/current/moonup.txt"
 FILE_MOON_DN="/var/www/html/current/moondn.txt"
+FILE_MOON_PHASE="/var/www/html/current/moon-phase.txt"
 
 # Renaming icon and Inserting weather
 sed -i 's/weather/icon/g' ${CURRENTLY_FILE}
 CURRENT_WEATHER=$(jq '.hourly[0].weather[].description' "$FULL_FILE" | sed 's/"//g' | sed 's/.*/\u&/')
 sed -i "/gust/a \  \"weather\": \"$CURRENT_WEATHER\"," "$CURRENTLY_FILE"
 
+CURRENT_WEATHER=$(jq '.weather' "$CURRENTLY_FILE")
 CURRENT_ICON=$(jq '.icon' "$CURRENTLY_FILE")
 CURRENT_WINDSPD=$(jq '.wind_speed' "$CURRENTLY_FILE")
 CURRENT_WINDDEG=$(jq '.wind_deg' "$CURRENTLY_FILE")
@@ -56,10 +58,10 @@ CURRENT_DEW=$(jq '.dew_point' "$CURRENTLY_FILE")
 CURRENT_UVI=$(jq '.uvi' "$CURRENTLY_FILE")
 SUN_UP=$(jq '.sunrise' "$CURRENTLY_FILE")
 SUN_DN=$(jq '.sunset' "$CURRENTLY_FILE")
+CURRENT_HUMIDITY=$(jq '.humidity' "$CURRENTLY_FILE")
 MOON_UP=$(jq '.daily[0].moonrise' "$FULL_FILE")
 MOON_DN=$(jq '.daily[0].moonset' "$FULL_FILE")
-
-CURRENT_HUMIDITY=$(jq '.humidity' ${CURRENTLY_FILE})
+MOON_PHASE=$(jq '.daily[0].moon_phase' "$FULL_FILE")
 
 echo "$CURRENT_WEATHER" > "$FILE_CURRENT_WEATHER"
 echo "$CURRENT_ICON" > "$FILE_CURRENT_ICON"
@@ -72,14 +74,17 @@ echo "$CURRENT_DEW" > "$FILE_CURRENT_DEW"
 echo "$CURRENT_UVI" > "$FILE_CURRENT_UVI"
 echo "$SUN_UP" > "$FILE_SUN_UP"
 echo "$SUN_DN" > "$FILE_SUN_DN"
+echo "$CURRENT_HUMIDITY" > "$FILE_CURRENT_HUMIDITY"
 echo "$MOON_UP" > "$FILE_MOON_UP"
 echo "$MOON_DN" > "$FILE_MOON_DN"
-echo "$CURRENT_HUMIDITY" > "$FILE_CURRENT_HUMIDITY"
+echo "$MOON_PHASE" > "$FILE_MOON_PHASE"
 
 if [[ ! -z "$ALERTS" ]]; then
   echo "$ALERTS" > "$FILE_ALERTS"
 else
-  rm "$FILE_ALERTS"
+  if [[ -f "$FILE_ALERTS" ]]; then
+    rm "$FILE_ALERTS"
+  fi
 fi
 
 # Hourly File
