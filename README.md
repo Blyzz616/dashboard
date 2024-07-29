@@ -9,7 +9,8 @@ However, I've got a few ESP32 boards that need to be put into service to report 
 Right now though, I'm just warming up!
 
 Currently looking like this:  
-![image](https://github.com/user-attachments/assets/cffe8a50-c180-4f9b-bdad-df383aa619f4)
+![image](https://github.com/user-attachments/assets/d9e18a8b-c005-40e2-a8b3-cf9d0455fb66)
+
 
 Now with 7-day forecast and moon position!
 
@@ -78,7 +79,7 @@ To do:
 - [ ] Include Network Monitoring SNMP/SIEM events?
 - [x] Moon Position
 - [x] Moon Phase
-- [ ] fix phase to be moon's shadow - not earth's!
+- [x] fix phase to be moon's shadow - not earth's!
 - [X] Update Temperature with JS
 
 Why is it ever time I mark something as complete, I add at least 2 more items?
