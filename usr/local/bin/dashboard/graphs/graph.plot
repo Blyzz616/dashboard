@@ -54,10 +54,10 @@ max_precip = real(system("cat /tmp/max_precip.txt"))
 max_plus = int(( max_temp + 1 ))
 min_minus = int(( min_temp -1 ))
 set yrange [min_minus:max_plus]
-set y2range [0:max_precip]
 
 # Conditional y2tics
 if (max_precip > 0) {
+    set y2range [0:max_precip]
     set y2tics (0, max_precip)
     set y2tics out
     set y2tics nomirror
