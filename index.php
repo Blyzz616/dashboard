@@ -3,18 +3,15 @@
 header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
 header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 
-function getLatestFile($path, $pattern) {
-    $files = glob($path . '/' . $pattern);
-    if (empty($files)) {
-        return null; // Return null if no files are found
+function getLatestFile($path, $filename) {
+    $filepath = $path . '/' . $filename;
+    if (!file_exists($filepath)) {
+        return null; // Return null if the file is not found
     }
-    usort($files, function($a, $b) {
-        return filemtime($b) - filemtime($a);
-    });
-    return $files[0];
+    return $filepath;
 }
 
-$current_conditions_file = getLatestFile('/var/www/html/json', '*_currently.json');
+$current_conditions_file = getLatestFile('/var/www/html/json', 'currently.json');
 if ($current_conditions_file === null) {
     echo "Error: Current conditions file not found.";
     exit;
@@ -39,9 +36,8 @@ if (file_exists($alerts_file)) {
     $alert_message = file_get_contents($alerts_file);
 }
 
-// Extract the epoch time from the filename
-preg_match('/(\d+)_currently.json/', basename($current_conditions_file), $matches);
-$file_epoch_time = isset($matches[1]) ? (int)$matches[1] : null;
+// Extract the epoch time from the JSON data
+$file_epoch_time = isset($current_conditions['dt']) ? (int)$current_conditions['dt'] : null;
 $current_time = time();
 $time_difference = $current_time - $file_epoch_time;
 $is_data_stale = $time_difference > (35 * 60); // 35 minutes in seconds
@@ -67,6 +63,20 @@ function getUviClass($uvi) {
 }
 
 $uvi_class = getUviClass($uvi);
+
+
+// Path to the moon phase file
+$moonPhaseFile = 'current/moon-phase.txt';
+
+// Read the moon phase value from the file
+$moonPhase = file_get_contents($moonPhaseFile);
+
+// Extract the digits after the period
+preg_match('/\.(\d{2})/', $moonPhase, $matches);
+$moonPhaseDigits = $matches[1];
+
+// Path to the moon phase image
+$moonPhaseImage = "img/moon/{$moonPhaseDigits}.png";
 
 // Output HTML content
 ?>
@@ -97,7 +107,7 @@ $uvi_class = getUviClass($uvi);
               <li>Humidity: <span id="humidity"><?php echo $humidity; ?></span>%</li>
               <li>Wind: <span id="wind-speed"><?php echo $wind_speed; ?></span> m/s <?php echo $wind_deg; ?></li>
               <li>UVI: <span id="uvi" class="<?php echo $uvi_class; ?>"><?php  $formatted_uvi = number_format($uvi, 1); echo $formatted_uvi; ?></span></li>
-              <li>Pressure: <span id="pressure"><?php echo $pressure; ?> hPa</span>%</li>
+              <li>Pressure: <span id="pressure"><?php echo $pressure; ?> hPa</span></li>
             </ul>
           </div>
         </div>
@@ -122,7 +132,7 @@ $uvi_class = getUviClass($uvi);
     <div class="other-info-container">
       <div class="bottom-left">
         <div id="sun-container" style="display: block;">
-          <svg height="280" viewbox="0 0 500 500">
+          <svg id="orrery" height="280" viewbox="0 0 500 500">
             <defs>
               <mask id="dimmer">
                 <rect x="0" y="0" width="500" height="250" fill="#ffffff" />
@@ -144,7 +154,6 @@ $uvi_class = getUviClass($uvi);
             <!--<rect width="500" height="200" x="0" y="200" fill-opacity="0.5" fill="black" />-->
             <text id="sunrise-time" x="0" y="210" fill="#777777" font-size="2vw" data-timestamp="<?php echo $sunrise; ?>"><?php echo date('H:i', $sunrise); ?></text>
             <text id="sunset-time" x="430" y="210" fill="#777777" font-size="2vw" data-timestamp="<?php echo $sunset; ?>"><?php echo date('H:i', $sunset); ?></text>
-
           </svg>
         </div>
       </div>
@@ -172,22 +181,30 @@ $uvi_class = getUviClass($uvi);
                     // Construct weather icon path
                     $iconPath = "img/weather/icon/$icon.svg"; // Adjust path as per your setup
 
-                    // Output HTML for this day
-                    echo '<div class="plus" id="plus'.$i.'">';
-                    echo '<div class="dayname" id="dayname'.$i.'">'.date('D', $timestamp).'</div>';
-                    echo '<div class="condition" id="condition'.$i.'"><center><img src="'.$iconPath.'" class="condition-size" alt="Weather Icon"></center></div>';
-                    echo '<div class="min-max" id="min-max'.$i.'">'.$minTemp.' / '.$maxTemp.'</div>';
-                    echo '</div>';
+                    // Output HTML
+                    echo "<div class='day-container'>";
+                    echo "<div id='dayname-plus$i' class='dayname'>$dayOfWeek</div>";
+                    echo "<div id='condition-plus$i' class='condition'><img src='$iconPath' width='32' height='32'></div>";
+                    echo "<div id='min-max-plus$i' class='min-max'>$minTemp&deg; / $maxTemp&deg;</div>";
+                    echo "</div>";
+                } else {
+                    echo "Error: Invalid data format in plus$i.json.";
                 }
+            } else {
+                echo "Error: plus$i.json not found.";
             }
         }
         ?>
       </div>
+      <div class="bottom-right">
+        <div id="moon-phase">
+          <img src="<?php echo $moonPhaseImage; ?>" alt="Moon Phase">
+        </div>
+      </div>
     </div>
-
-    <!-- Alert Container -->
-    <div id="alert-container" class="alert-container"></div>
-
+  </div>
+  <div id="alert-container" class="alert-container">
+    <pre><?php echo $alert_message; ?></pre>
   </div>
   <script src="js/main.js"></script>
 </body>
