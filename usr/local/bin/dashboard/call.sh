@@ -5,9 +5,9 @@
 #######################################
 
 # OpenWeatherMap API credentials
-LAT=""  # Latitude for the weather data
-LON=""  # Longitude for the weather data
-APP_ID=""  # Your OpenWeatherMap API key
+#LAT=""
+#LON=""
+#APP_ID=""
 EXCLUDE="minutely,timezone,timezone_offset"
 DATESTAMP=$(date +%s)
 FULL_TEMP="/tmp/full.json"
@@ -23,7 +23,7 @@ mv "$FULL_TEMP" "$FULL_FILE"
 ALERTS=$(jq -r '.alerts[]? | .description //empty' "$FULL_FILE" | sed 's/\\n/<br>/g' | sed 's/"//g' 2>/dev/null) || unset ALERTS
 
 # Currently file
-jq '.current | {dt, sunrise, sunset, temp, pressure, humidity, dew_point, uvi, clouds, wind_speed, wind_deg, wind_gust, weather: .weather[0].icon}' "$FULL_FILE" > "$CURRENTLY_FILE"
+jq '.current | {dt, sunrise, sunset, temp, pressure, humidity, dew_point, uvi, clouds, wind_speed, wind_deg, wind_gust, rain, snow, weather: .weather[0].icon}' "$FULL_FILE" > "$CURRENTLY_FILE"
 
 FILE_CURRENT_WEATHER="/var/www/html/current/weather.txt"
 FILE_CURRENT_ICON="/var/www/html/current/icon.txt"
@@ -37,6 +37,8 @@ FILE_CURRENT_UVI="/var/www/html/current/uvi.txt"
 FILE_SUN_UP="/var/www/html/current/sun_up.txt"
 FILE_SUN_DN="/var/www/html/current/sun_dn.txt"
 FILE_CURRENT_HUMIDITY="/var/www/html/current/humidity.txt"
+FILE_CURRENT_RAIN="/var/www/html/current/rain.txt"
+FILE_CURRENT_SNOW="/var/www/html/current/snow.txt"
 FILE_ALERTS="/var/www/html/current/alerts.txt"
 FILE_MOON_UP="/var/www/html/current/moonup.txt"
 FILE_MOON_DN="/var/www/html/current/moondn.txt"
@@ -47,9 +49,9 @@ sed -i 's/weather/icon/g' ${CURRENTLY_FILE}
 CURRENT_WEATHER=$(jq '.hourly[0].weather[].description' "$FULL_FILE" | sed 's/"//g' | sed 's/.*/\u&/')
 sed -i "/gust/a \  \"weather\": \"$CURRENT_WEATHER\"," "$CURRENTLY_FILE"
 
-CURRENT_WEATHER=$(jq '.weather' "$CURRENTLY_FILE")
+CURRENT_WEATHER=$(jq '.weather' "$CURRENTLY_FILE" | sed 's/"//g')
 CURRENT_ICON=$(jq '.icon' "$CURRENTLY_FILE")
-CURRENT_WINDSPD=$(jq '.wind_speed' "$CURRENTLY_FILE")
+CURRENT_WINDSPD=$(printf "%.1f" $(jq '.wind_speed' "$CURRENTLY_FILE" | bc -l))
 CURRENT_WINDDEG=$(jq '.wind_deg' "$CURRENTLY_FILE")
 CURRENT_TEMP=$(jq '.temp' "$CURRENTLY_FILE")
 CURRENT_CLOUD=$(jq '.clouds' "$CURRENTLY_FILE")
@@ -59,6 +61,8 @@ CURRENT_UVI=$(jq '.uvi' "$CURRENTLY_FILE")
 SUN_UP=$(jq '.sunrise' "$CURRENTLY_FILE")
 SUN_DN=$(jq '.sunset' "$CURRENTLY_FILE")
 CURRENT_HUMIDITY=$(jq '.humidity' "$CURRENTLY_FILE")
+CURRENT_RAIN=$(jq '.rain' "$CURRENTLY_FILE")
+CURRENT_SNOW=$(jq '.snow' "$CURRENTLY_FILE")
 MOON_UP=$(jq '.daily[0].moonrise' "$FULL_FILE")
 MOON_DN=$(jq '.daily[0].moonset' "$FULL_FILE")
 MOON_PHASE=$(jq '.daily[0].moon_phase' "$FULL_FILE")
@@ -79,7 +83,24 @@ echo "$MOON_UP" > "$FILE_MOON_UP"
 echo "$MOON_DN" > "$FILE_MOON_DN"
 echo "$MOON_PHASE" > "$FILE_MOON_PHASE"
 
-if [[ ! -z "$ALERTS" ]]; then
+NULL_REGEX="^NULL$|^null$"
+
+# Handle Rain
+if [[ -z "$CURRENT_RAIN" || "$CURRENT_RAIN" =~ $NULL_REGEX ]]; then
+  echo "0" > "$FILE_CURRENT_RAIN"
+else
+  echo "$CURRENT_RAIN" > "$FILE_CURRENT_RAIN"
+fi
+
+# Handle Snow
+if [[ -z "$CURRENT_SNOW" || "$CURRENT_SNOW" =~ $NULL_REGEX ]]; then
+  echo "0" > "$FILE_CURRENT_SNOW"
+else
+  echo "$CURRENT_SNOW" > "$FILE_CURRENT_SNOW"
+fi
+
+# HAndle Alerts
+if [[ -n "$ALERTS" ]]; then
   echo "$ALERTS" > "$FILE_ALERTS"
 else
   if [[ -f "$FILE_ALERTS" ]]; then
@@ -172,10 +193,12 @@ else
 fi
 echo "$MAX_PRECIP" > /tmp/max_precip.txt
 
-awk -F, '$10 == 1 {if($8 > max) max=$8} END {print max}' /tmp/plot2.csv > /tmp/max_wind_speed.txt
-
 # 1 EPOCH - 2 TIME - 3 TEMPERATURE - 4 RAIN - 5 SNOW - 6 CLOUD - 7 DEW - 8 WINDSPEED - 9 WINDDIRECTION - 10 QUARTER
 paste -d , /tmp/epoch.txt /tmp/time_data.txt /tmp/temp_data.txt /tmp/rain_data.txt /tmp/snow_data.txt /tmp/cloud_data.txt /tmp/dew_data.txt /tmp/wnd_spd.txt /tmp/wnd_deg.txt /tmp/quarter.txt > /tmp/plot2.csv
 
+awk -F, '$10 == 1 {if($8 > max) max=$8} END {print max}' /tmp/plot2.csv > /tmp/max_wind_speed.txt
+
 # Run Gnuplot script
 gnuplot /usr/local/bin/dashboard/graphs/graph.plot 2>/dev/null
+
+date > /var/log/call.log

@@ -1,0 +1,18 @@
+{
+  "dt": 1726341301,
+  "sunrise": 1726321513,
+  "sunset": 1726367049,
+  "temp": 15.94,
+  "pressure": 1012,
+  "humidity": 89,
+  "dew_point": 14.13,
+  "uvi": 0.41,
+  "clouds": 75,
+  "wind_speed": 1.76,
+  "wind_deg": 251,
+  "wind_gust": 3.8,
+  "weather": "Light rain",
+  "rain": null,
+  "snow": null,
+  "icon": "04d"
+}

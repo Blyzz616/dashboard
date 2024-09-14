@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .trapezoid-wrapper {
+            display: inline-block;
+            overflow: hidden; /* Ensure the text is clipped correctly */
+            clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
+        }
+
+        .trapezoid-text {
+            font-size: 40px;
+            text-align: center;
+            display: block;
+            padding: 10px 20px;
+            background-color: lightgray;
+        }
+    </style>
+</head>
+<body>
+    <div class="trapezoid-wrapper">
+        <div class="trapezoid-text">
+            TEXT IN TRAPEZOID SHAPE
+        </div>
+    </div>
+</body>
+</html>

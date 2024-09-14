@@ -72,8 +72,13 @@ $moonPhaseFile = 'current/moon-phase.txt';
 $moonPhase = file_get_contents($moonPhaseFile);
 
 // Extract the digits after the period
-preg_match('/\.(\d{2})/', $moonPhase, $matches);
+preg_match('/\.(\d{1,2})/', $moonPhase, $matches);
 $moonPhaseDigits = $matches[1];
+
+// Check if there is only one digit, and if so, add a "0" (i.e 90% would be: 0.9, becomes 9 becomes 90)
+if (strlen($moonPhaseDigits) === 1) {
+    $moonPhaseDigits .= '0';
+}
 
 // Path to the moon phase image
 $moonPhaseImage = "img/moon/{$moonPhaseDigits}.png";
@@ -96,19 +101,30 @@ $moonPhaseImage = "img/moon/{$moonPhaseDigits}.png";
     <div class="top-row">
       <!-- Left Column for weather information -->
       <div class="left-column">
-      <div class="date"><em>
-        <?php echo date("D, M j, Y"); ?></em>
+      <div class="date">
+      <?php
+        date_default_timezone_set('America/Vancouver');
+        echo date("D, M j, Y");
+      ?>
       </div>
         <div class="weather-container">
           <div id="temp"><?php $formatted_temp = number_format($temp, 1); echo $formatted_temp; ?>&deg;</div>
           <div id="additional-info">
-            <div id="weather"><?php echo $description; ?></div>
-            <ul>
-              <li>Humidity: <span id="humidity"><?php echo $humidity; ?></span>%</li>
+            <div class="mono" id="weather"><?php echo $description; ?></div>
+            <table id="weathertab">
+              <tr>
+                <td>Humidity: <span id="humidity"><?php echo $humidity; ?></span>%</td>
+                <td>UVI: <span id="uvi" class="<?php echo $uvi_class; ?>"><?php  $formatted_uvi = number_format($uvi, 1); echo $formatted_uvi; ?></span></td>
+              </tr>
+              <tr>
+		<td colspan="2">Wind: <span id="wind-speed" data-direction="<?php echo $wind_direction; ?>"><?php echo $wind_speed; ?></span> m/s &nbsp;&nbsp;&nbsp;&nbsp;<span class="weathervane">c</span></td>
+                <!--<td colspan="2">Wind: <span id="wind-speed"><?php echo $wind_speed; ?></span> m/s <span class="weathervane"> c </span></td>-->
+              <tr/>
+            </table>
+              <!--<li>Humidity: <span id="humidity"><?php echo $humidity; ?></span>%</li>
               <li>Wind: <span id="wind-speed"><?php echo $wind_speed; ?></span> m/s <?php echo $wind_deg; ?></li>
               <li>UVI: <span id="uvi" class="<?php echo $uvi_class; ?>"><?php  $formatted_uvi = number_format($uvi, 1); echo $formatted_uvi; ?></span></li>
-              <li>Pressure: <span id="pressure"><?php echo $pressure; ?> hPa</span></li>
-            </ul>
+              <li>Pressure: <span id="pressure"><?php echo $pressure; ?> hPa</span></li>-->
           </div>
         </div>
       </div>

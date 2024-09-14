@@ -1,4 +1,41 @@
 /* Global styles */
+
+@keyframes oscillation {
+  0% {
+    transform: rotate(calc(var(--rotation-angle) - 5deg));
+  }
+  50% {
+    transform: rotate(calc(var(--rotation-angle) + 5deg));
+  }
+  100% {
+    transform: rotate(calc(var(--rotation-angle) - 5deg));
+  }
+}
+
+.weathervane {
+  display: inline-block;
+  font-family: arrows;
+  font-size: 2em;
+  --rotation-angle: 0deg;
+  animation: oscillation var(--oscillation-duration) infinite;
+  transition-timing-function: cubic-bezier(0.7, 0, 0.8, 1);
+}
+
+@font-face {
+  font-family: timefont;
+  src: url(../fonts/poevetica.ttf);
+}
+
+@font-face {
+  font-family: splitflap;
+  src: url(../fonts/cutive.ttf);
+}
+
+@font-face {
+  font-family: arrows;
+  src: url(../fonts/arrows.ttf);
+}
+
 body {
   margin: 0;
   font-family: Roboto, sans-serif;
@@ -128,6 +165,7 @@ body {
 }
 
 #clock {
+  font-family: timefont;
   font-size: calc(18vw);
 }
 
@@ -163,11 +201,8 @@ body {
 
 .seven-day{
   position: absolute;
-/*  right: 0px;*/
   display: flex;
   flex-direction: row;
-margin: 0 0 0 25%;
-/*  height: 200px;*/
 }
 
 .dayname{
@@ -180,6 +215,11 @@ margin: 0 0 0 25%;
 
 .condition{
   width: 100%;
+}
+
+.condition img {
+  width: auto;
+  height: 100px;
 }
 
 .condition-size {
@@ -199,6 +239,57 @@ margin: 0 0 0 25%;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.bottom-right {
+  position: absolute;
+  width: 250px;
+  height: 202px;
+  bottom: 20px;
+  right: 20px;
+}
+
+#moon-phase img {
+  height: auto;
+  width: 200px;
+}
+
+.mono {
+  font-family: splitflap;
+  /*font-family: 'Courier New', monospace;*/
+  text-transform: uppercase;
+  /*font-variant: petite-caps;*/
+  padding-bottom: 15px;
+}
+
+#weathertab {
+  width: 100%;
+}
+
+#weathertab td {
+  text-align: center;
+  padding: 5px;
+  vertical-align: middle;
+}
+
+/*.weathervane {
+  display: inline-block;
+  transition: transform 1.8s;
+  transition-timing-function: cubic-bezier(0.7, 0, 0.8, 1);
+  font-family: arrows;
+  font-size: 2em;
+}
+*/
+
+.weathervane {
+  display: inline-block;
+  font-family: arrows;
+  font-size: 2em;
+  --rotation-angle: 0deg;
+}
+
+.weathervane.oscillating {
+  animation: oscillation var(--oscillation-duration) infinite ease-in-out;
 }
 
 #sun-container {

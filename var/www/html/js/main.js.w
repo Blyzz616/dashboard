@@ -11,7 +11,7 @@ function displayAlert(message) {
 
 function updateForecastImage() {
   const forecastImage = document.getElementById('forecast-image');
-  const newData = `../img/forecast.svg?${new Date().getTime()}`; // Cache-busting by appending the current timestamp
+  const newData = `../img/forecast.svg`; // Cache-busting by appending the current timestamp
   forecastImage.setAttribute('data', newData);
 }
 
@@ -41,11 +41,134 @@ function fetchAlerts() {
     });
 }
 
+// Function to update weather description with "split-flap" effect
+function splitFlapEffect(newDescription) {
+  const weatherElement = document.getElementById('weather');
+  const totalTime = 2600; // Total effect duration in milliseconds
+  const characterUpdateInterval = 50; // Time in milliseconds to update characters
+  const stepInterval = 200; // Time in milliseconds to update each character
+
+  let currentIndex = 0;
+  const descriptionLength = newDescription.length;
+
+  function getRandomChar() {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    return chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+
+  function updateDescription() {
+    let displayText = '';
+
+    // Generate random characters, but keep spaces as is
+    for (let i = 0; i < descriptionLength; i++) {
+      if (newDescription[i] === ' ') {
+        displayText += ' '; // Maintain spaces
+      } else if (i < currentIndex) {
+        displayText += newDescription[i]; // Use correct character once its time has passed
+      } else {
+        displayText += getRandomChar(); // Randomize character
+      }
+    }
+
+    weatherElement.textContent = displayText;
+
+    if (currentIndex < descriptionLength) {
+      setTimeout(updateDescription, characterUpdateInterval);
+    }
+  }
+
+  function finalizeDescription() {
+    weatherElement.textContent = newDescription;
+  }
+
+  // Start the effect
+  updateDescription();
+
+  // Set intervals to update each character to the correct one
+  const effectIntervals = [];
+  for (let i = 0; i < descriptionLength; i++) {
+    if (newDescription[i] !== ' ') {
+      effectIntervals.push(setTimeout(() => {
+        currentIndex = i + 1;
+        if (currentIndex === descriptionLength) {
+          finalizeDescription();
+        }
+      }, (i + 1) * stepInterval));
+    }
+  }
+
+  // Clear intervals after total effect duration
+  setTimeout(() => {
+    effectIntervals.forEach(clearTimeout);
+    finalizeDescription();
+  }, totalTime + descriptionLength * stepInterval); // Adjusted to account for longer texts
+}
+
+// Function to update weather description
+function updateWeatherDescription() {
+  fetch('../current/weather.txt') // Replace with the correct URL or endpoint
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.text();
+    })
+    .then(description => {
+      splitFlapEffect(description.trim());
+    })
+    .catch(error => {
+      console.error('Error fetching weather description:', error);
+    });
+}
+
 // Initial alert check
 fetchAlerts();
 
 // Set interval to check for alert message every hour
 setInterval(fetchAlerts, 3600000); // Check every hour (3600000 milliseconds)
+
+// Initial weather description update
+updateWeatherDescription();
+
+// Set interval to update weather description every 15 minutes
+setInterval(updateWeatherDescription, 900000); // 900000 milliseconds = 15 minutes
+
+function updateWindDirection() {
+  fetch('../current/winddeg.txt')
+    .then(response => response.text())
+    .then(text => {
+      const windDirection = parseFloat(text.trim());
+
+      // Check if windDirection is valid
+      if (isNaN(windDirection)) {
+        console.error('Invalid wind direction value:', windDirection);
+        return;
+      }
+
+      // Calculate the rotation angle
+      const rotation = windDirection % 360; // Ensure the rotation is within 0 to 359 degrees
+
+      // Log the values for debugging
+      console.log('Wind direction:', windDirection);
+      console.log('Calculated rotation:', rotation);
+
+      // Apply the rotation
+      const weathervane = document.querySelector('.weathervane');
+      if (weathervane) {
+        weathervane.style.transform = `rotate(${rotation}deg)`;
+        console.log('Rotation applied:', weathervane.style.transform);
+      } else {
+        console.error('No element with class .weathervane found.');
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching wind direction:', error);
+    });
+}
+
+// Call the function to update wind direction
+updateWindDirection();
+
 
 function updateClock() {
   const now = new Date();
@@ -193,5 +316,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Update the forecast image every 5 minutes
   setInterval(updateForecastImage, 300000); // 300000 milliseconds = 5 minutes
+
+  // Set an interval to update the wind direction every 15 minutes (900000 milliseconds)
+  setInterval(updateWindDirection, 900000); // 900000 ms = 15 minutes
+
+  updateWindDirection();
+
 
 });
