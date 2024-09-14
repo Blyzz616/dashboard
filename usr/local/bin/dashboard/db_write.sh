@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # Database credentials
-DB_USER="weatherman"
-DB_PASS="x94#CCn5SAxVaut5QMy2VBet2vLqo^YG"
-DB_NAME="weather" # Replace with your actual database name
+DB_USER=""
+DB_PASS=""
+DB_NAME="" # Replace with your actual database name
 
 # JSON file path
 JSON_FILE="/var/www/html/json/currently.json"
