@@ -29,7 +29,7 @@ Now though, It's got a weather icon in the middle, and it also grew up a little 
 There are 3 different calculations performed throughout the day:
 
 Basing this on my e-paper desk clock that I've been using for the last few years:  
-![display](https://github.com/Blyzz616/dashboard/assets/19424317/37c94e7f-a96b-4ac3-b51e-6d7318c1b85e)
+(image lost - will replace at some point)
 
 
 1. Daytime Calculation - Sunrise to Sunset:
