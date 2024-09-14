@@ -3,7 +3,7 @@
 # Database credentials
 DB_USER=""
 DB_PASS=""
-DB_NAME="" # Replace with your actual database name
+DB_NAME=""
 
 # JSON file path
 JSON_FILE="/var/www/html/json/currently.json"
