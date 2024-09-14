@@ -9,14 +9,14 @@ However, I've got a few ESP32 boards that need to be put into service to report 
 Right now though, I'm just warming up!
 
 Currently looking like this:  
-![image](https://github.com/user-attachments/assets/d9e18a8b-c005-40e2-a8b3-cf9d0455fb66)
+![image](https://github.com/user-attachments/assets/a4a045ca-9b93-4d7b-9b52-8b52401dee51)
 
 
 Now with 7-day forecast and moon position!
 
 Also - you just gotta love these icons!
 
-![Sunny](/img/weather/icon/01d.svg)  ![cloudy](/img/weather/icon/03d.svg)  ![Rainy](/img/weather/icon/10d.svg)  
+![Sunny](/var/www/html/img/weather/icon/01d.svg)  ![cloudy](/var/www/html/img/weather/icon/03d.svg)  ![Rainy](/var/www/html/img/weather/icon/10d.svg)  
 
 
 I've jsut added the moon phase indicator - And I'm wondering if I should use it as the tiny little moon guy in the sun/moon position indicator on the left too.
