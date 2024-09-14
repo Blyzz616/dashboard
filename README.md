@@ -21,6 +21,13 @@ When the page first loads and every 15 minutes, we get this effect as well:
 
 ![splitflap](https://github.com/user-attachments/assets/e3df486f-2ec7-4959-9658-42722a0d9891)
 
+Then there's the wind direction oscillation depending on the wind speed:
+
+4 meters/second vs 20 meters/second:
+
+
+![windspd4mps](https://github.com/user-attachments/assets/0b13565e-60b3-4e3a-80a9-ac00cf931104)   ![windspd20mps](https://github.com/user-attachments/assets/5982d94f-6763-4a42-aca0-390f4f71c402)
+
 I've jsut added the moon phase indicator - And I'm wondering if I should use it as the tiny little moon guy in the sun/moon position indicator on the left too.
 
 The circle at the bottom started out life as a day-light indicator.   
