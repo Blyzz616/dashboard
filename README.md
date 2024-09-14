@@ -68,6 +68,10 @@ To do:
    - [x] Add UVI
    - [ ] Add Probability of Precip
 - [x] Windspeed and direction
+   - [x] Add wind variability (weathervane wiggle)
+      - [x] Maybe based on windstrength
+   - [ ] Add wind randomness when speed at 0
+   - [ ] fix wind direction (defaulting back to 0 after init)
 - [ ] Include predicted vs actual temperatures
 - [ ] include temperatures from
   - [ ] Garage
