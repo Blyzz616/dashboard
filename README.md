@@ -17,6 +17,9 @@ Also - you just gotta love these icons!
 
 ![Sunny](/var/www/html/img/weather/icon/01d.svg)  ![cloudy](/var/www/html/img/weather/icon/03d.svg)  ![Rainy](/var/www/html/img/weather/icon/10d.svg)  
 
+When the page first loads and every 15 minutes, we get this effect as well:
+
+![splitflap](https://github.com/user-attachments/assets/e3df486f-2ec7-4959-9658-42722a0d9891)
 
 I've jsut added the moon phase indicator - And I'm wondering if I should use it as the tiny little moon guy in the sun/moon position indicator on the left too.
 
