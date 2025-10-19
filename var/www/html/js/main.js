@@ -295,9 +295,31 @@ function fetchTemperatureAndUpdate() {
     });
 }
 
+function updateNightShade() {
+  const shade = document.querySelector('.shade');
+  if (!shade) return;
+
+  const hour = new Date().getHours();
+  const isNight = hour >= 22 || hour < 6; // 10 PM to 6 AM
+
+  if (isNight) {
+    shade.style.display = 'block';
+    shade.style.opacity = '1';
+  } else {
+    shade.style.opacity = '0';
+    setTimeout(() => shade.style.display = 'none', 1000);
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   updateClock();
   setInterval(updateClock, 1000);
+
+  // Apply night shade immediately
+  updateNightShade();
+
+  // Recheck every 5 minutes in case of time change
+  setInterval(updateNightShade, 300000);
 
   // Initial sunrise and sunset times from PHP-rendered HTML
   const sunriseTimestamp = parseInt(document.getElementById('sunrise-time').getAttribute('data-timestamp'), 10) * 1000;
