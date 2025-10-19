@@ -149,7 +149,7 @@ $moonPhaseImage = "img/moon/{$moonPhaseDigits}.png";
     <div class="other-info-container">
       <div class="bottom-left">
         <div id="sun-container" style="display: block;">
-          <svg id="orrery" height="280" viewbox="0 0 500 500">
+          <svg id="orrery" height="280" width="300" viewbox="10 0 500 500">
             <defs>
               <mask id="dimmer">
                 <rect x="0" y="0" width="500" height="250" fill="#ffffff" />
@@ -169,49 +169,51 @@ $moonPhaseImage = "img/moon/{$moonPhaseDigits}.png";
             <circle id="m_arc" cx="250" cy="200" r="110" fill="none" stroke="grey" stroke-width="6" mask="url(#dimmer)"></circle>
             <circle id="moon" cx="250" cy="200" r="15" fill="lightgrey"></circle>
             <!--<rect width="500" height="200" x="0" y="200" fill-opacity="0.5" fill="black" />-->
-            <text id="sunrise-time" x="0" y="210" fill="#777777" font-size="2vw" data-timestamp="<?php echo $sunrise; ?>"><?php echo date('H:i', $sunrise); ?></text>
+            <text id="sunrise-time" x="-10" y="210" fill="#777777" font-size="2vw" data-timestamp="<?php echo $sunrise; ?>"><?php echo date('H:i', $sunrise); ?></text>
             <text id="sunset-time" x="430" y="210" fill="#777777" font-size="2vw" data-timestamp="<?php echo $sunset; ?>"><?php echo date('H:i', $sunset); ?></text>
           </svg>
         </div>
       </div>
-      <div class="seven-day">
-        <?php
-        // Iterate through each day div (plus1 to plus7)
-        for ($i = 1; $i <= 7; $i++) {
-            $jsonFile = "daily/plus$i.json"; // Adjust path as per your setup
+      <div class="bottom-center">
+        <div class="seven-day">
+          <?php
+          // Iterate through each day div (plus1 to plus7)
+          for ($i = 1; $i <= 7; $i++) {
+              $jsonFile = "daily/plus$i.json"; // Adjust path as per your setup
 
-            if (file_exists($jsonFile)) {
-                // Read JSON file
-                $jsonContents = file_get_contents($jsonFile);
-                $data = json_decode($jsonContents, true);
+              if (file_exists($jsonFile)) {
+                  // Read JSON file
+                  $jsonContents = file_get_contents($jsonFile);
+                  $data = json_decode($jsonContents, true);
 
-                if ($data && isset($data['dt'], $data['icon'], $data['min'], $data['max'])) {
-                    // Extract data
-                    $timestamp = $data['dt'];
-                    $icon = $data['icon'];
-                    $minTemp = intval($data['min']);
-                    $maxTemp = intval($data['max']);
+                  if ($data && isset($data['dt'], $data['icon'], $data['min'], $data['max'])) {
+                      // Extract data
+                      $timestamp = $data['dt'];
+                      $icon = $data['icon'];
+                      $minTemp = intval($data['min']);
+                      $maxTemp = intval($data['max']);
 
-                    // Convert epoch to abbreviated day name
-                    $dayOfWeek = date('D', $timestamp);
+                      // Convert epoch to abbreviated day name
+                      $dayOfWeek = date('D', $timestamp);
 
-                    // Construct weather icon path
-                    $iconPath = "img/weather/icon/$icon.svg"; // Adjust path as per your setup
+                      // Construct weather icon path
+                      $iconPath = "img/weather/icon/$icon.svg"; // Adjust path as per your setup
 
-                    // Output HTML
-                    echo "<div class='day-container'>";
-                    echo "<div id='dayname-plus$i' class='dayname'>$dayOfWeek</div>";
-                    echo "<div id='condition-plus$i' class='condition'><img src='$iconPath' width='32' height='32'></div>";
-                    echo "<div id='min-max-plus$i' class='min-max'>$minTemp&deg; / $maxTemp&deg;</div>";
-                    echo "</div>";
-                } else {
-                    echo "Error: Invalid data format in plus$i.json.";
-                }
-            } else {
-                echo "Error: plus$i.json not found.";
-            }
-        }
-        ?>
+                      // Output HTML
+                      echo "<div class='day-container'>";
+                      echo "<div id='dayname-plus$i' class='dayname'>$dayOfWeek</div>";
+                      echo "<div id='condition-plus$i' class='condition'><img src='$iconPath' width='32' height='32'></div>";
+                      echo "<div id='min-max-plus$i' class='min-max'>$minTemp&deg; / $maxTemp&deg;</div>";
+                      echo "</div>";
+                  } else {
+                      echo "Error: Invalid data format in plus$i.json.";
+                  }
+              } else {
+                  echo "Error: plus$i.json not found.";
+              }
+          }
+          ?>
+        </div>
       </div>
       <div class="bottom-right">
         <div id="moon-phase">
