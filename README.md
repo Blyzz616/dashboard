@@ -81,7 +81,7 @@ To do:
    - [x] Add wind variability (weathervane wiggle)
       - [x] Maybe based on windstrength
    - [ ] Add wind randomness when speed at 0
-   - [ ] fix wind direction (defaulting back to 0 after init)
+   - [x] fix wind direction (defaulting back to 0 after init)
 - [ ] Include predicted vs actual temperatures
 - [ ] include temperatures from
    - [ ] climasite project
