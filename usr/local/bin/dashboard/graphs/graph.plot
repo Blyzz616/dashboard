@@ -43,7 +43,7 @@ set origin 0,0.2
 set grid xtics lt 1 lw 1 lc rgb "#444444"
 set grid ytics lt 1 lw 1 lc rgb "#444444"
 set xtics timedate
-set xtics format "%H:%M"
+set xtics format "%H"
 set ytics scale 0
 set xtics scale 0
 
@@ -74,13 +74,17 @@ set ytics min_temp, tic_interval, max_temp format "%.0f"
 set datafile separator ","
 set style fill solid 0.7 noborder
 
-# Define a hard palette: pure blue below 0, pure red above
-set palette defined (-1 "blue", 0 "blue", 0.0001 "red", 1 "red")
-#set cbrange [-1:1]
+# ---- Functions to split lines at 0 crossing ----
+zero_cross(x1,y1,x2,y2) = (y1*y2<0) ? (x1 + (0 - y1)*(x2-x1)/(y2-y1)) : NaN
 
-plot '/tmp/plot2.csv' using 1:3:(($3 >= 0) ? 1 : -1) with lines lc palette z notitle, \
-     '' using 1:4 axes x1y2 with boxes lc rgb "blue" notitle, \
-     '' using 1:7:(($7 >= 0) ? 1 : -1) with lines lc palette z notitle
+# Plot
+# Rain bars first
+plot '/tmp/plot2.csv' using 1:4 axes x1y2 with boxes lc rgb "blue" notitle, \
+     '' using 1:(($3 > 0) ? $3 : 0) with lines lc rgb "red" lw 2 notitle, \
+     '' using 1:(($3 < 0) ? $3 : 0) with lines lc rgb "blue" lw 2 notitle, \
+     '' using 1:(($7 > 0) ? $7 : 0) with lines lc rgb "#65398E" lw 2 notitle, \
+     '' using 1:(($7 < 0) ? $7 : 0) with lines lc rgb "#000088" lw 2 notitle
+
 
 unset xtics
 unset ytics
