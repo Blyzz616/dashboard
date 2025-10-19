@@ -97,6 +97,7 @@ $moonPhaseImage = "img/moon/{$moonPhaseDigits}.png";
   <meta http-equiv="refresh" content="21600"> <!-- 6 hours in seconds -->
 </head>
 <body>
+  <div class="shade"></div>
   <div class="dashboard">
     <div class="top-row">
       <!-- Left Column for weather information -->
