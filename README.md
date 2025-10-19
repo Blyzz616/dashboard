@@ -67,6 +67,7 @@ To do:
 - ~~On page load: Render the page as quickly as possible. Then preform the calculations for the remainder of the day.~~ invalidated by previous commit
 - [x] Build a nice bar/line graph showing the next 48 hours with
   - [x] Temperature line (red above 0 /blue below) (left Y)
+     - [ ] Add the sub-zero line permanently below the red line - this will prevent a break when the temperature crosses the 0deg mark
   - [x] Precipitation bar graph (right Y)
   - [x] Can we split this?
     - [x] rain
@@ -83,13 +84,8 @@ To do:
    - [ ] fix wind direction (defaulting back to 0 after init)
 - [ ] Include predicted vs actual temperatures
 - [ ] include temperatures from
-  - [ ] Garage
-  - [ ] Deep Freeze
-- [ ] Include soil Probes?
-- [ ] Include SDR ADS-B?
+   - [ ] climasite project
 - [ ] Include stuff from Home Assistant?
-- [ ] Include stuff from Klipper? (3d Printer)
-- [ ] Include Network Monitoring SNMP/SIEM events?
 - [x] Moon Position
 - [x] Moon Phase
 - [x] fix phase to be moon's shadow - not earth's!
