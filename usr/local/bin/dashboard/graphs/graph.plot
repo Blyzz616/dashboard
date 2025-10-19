@@ -74,13 +74,13 @@ set ytics min_temp, tic_interval, max_temp format "%.0f"
 set datafile separator ","
 set style fill solid 0.7 noborder
 
-# Plot temperature (with conditional color based on freezing point)
-plot '/tmp/plot2.csv' using 1:($3 >= 0 ? $3 : NaN):xtic(2) with lines lc rgb "red" notitle, \
+# Define a hard palette: pure blue below 0, pure red above
+set palette defined (-1 "blue", 0 "blue", 0.0001 "red", 1 "red")
+#set cbrange [-1:1]
+
+plot '/tmp/plot2.csv' using 1:3:(($3 >= 0) ? 1 : -1) with lines lc palette z notitle, \
      '' using 1:4 axes x1y2 with boxes lc rgb "blue" notitle, \
-     '' using 1:($3 >= 0 ? $3 : NaN):xtic(2) with lines lc rgb "red" notitle, \
-     '' using 1:($3 < 0 ? $3 : NaN) with lines lc rgb "blue" notitle, \
-     '' using 1:($7 >= 0 ? NaN : $7) with lines lc rgb "#000088" notitle, \
-     '' using 1:($7 < 0 ? NaN : $7) with lines lc rgb "#65398E" notitle
+     '' using 1:7:(($7 >= 0) ? 1 : -1) with lines lc palette z notitle
 
 unset xtics
 unset ytics
