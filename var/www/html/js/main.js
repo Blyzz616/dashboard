@@ -170,6 +170,11 @@ function updateWindDirection() {
 
       const weathervane = document.querySelector('.weathervane');
       if (weathervane) {
+
+	// Step 0: Stop any oscillation before changing direction
+	weathervane.classList.remove('oscillating');
+	weathervane.style.transition = 'none';
+
         // Step 1: Initial movement to the wind direction
         weathervane.style.transition = 'transform 1s cubic-bezier(0.7, 0, 0.8, 1)';
         weathervane.style.transform = `rotate(${rotation}deg)`;
@@ -183,8 +188,13 @@ function updateWindDirection() {
           // Step 3: Apply oscillation
           setTimeout(() => {
             weathervane.style.transition = 'none'; // Disable transition for smooth oscillation
+	    weathervane.style.setProperty('--rotation-angle', `${rotation}deg`); // define the base angle
             weathervane.style.setProperty('--oscillation-duration', `${oscillationDuration}s`);
-            weathervane.classList.add('oscillating');
+
+	  // Restart the animation cleanly (if it was already oscillating)
+	  weathervane.classList.remove('oscillating');
+	  void weathervane.offsetWidth; // Force reflow
+	  weathervane.classList.add('oscillating');
           }, 1000); // Delay for the transition to the start of oscillation
         }, 1000); // Delay for the initial wind direction transition
       } else {
@@ -372,6 +382,4 @@ document.addEventListener('DOMContentLoaded', () => {
   setInterval(updateWindDirection, 900000); // 900000 ms = 15 minutes
 
   updateWindDirection();
-
-
 });
