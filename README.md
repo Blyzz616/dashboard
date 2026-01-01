@@ -1,6 +1,6 @@
 #  Creating a new Dashboard
 
-⚠️This Repo is not deprecated. - [New repo here](https://github.com/Blyzz616/Dashboardv2)⚠️
+⚠️This Repo is now deprecated. - [New repo here](https://github.com/Blyzz616/Dashboardv2)⚠️
 
 The new Repo has some sensors that may not be in your homelab.
 I've changed the layouts to include the new information.
