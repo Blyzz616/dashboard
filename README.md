@@ -2,13 +2,16 @@
 
 ⚠️This Repo is now deprecated. - [New repo here](https://github.com/Blyzz616/Dashboardv2)⚠️
 
-The new Repo has some sensors that may not be in your homelab.
-I've changed the layouts to include the new information.
+The new Repo has some sensors that may not be in your homelab.  
+example:  
+<img width="126" height="77" alt="image" src="https://github.com/user-attachments/assets/f45747c2-168d-4361-af78-8f57ad5e08d3" />
+
+I've changed the layouts to include the new information.  
 As you may want this older version that that should work for anyone, I'm going to leave it here for the time being.
 
 Naturally, I'll no longer be maintaining this one.
 
-I'll probably be renaming this one to "Dashboard - old"
+I'll probably be renaming this one to "Dashboard - old"  
 and the new "Dashboardv2 to the current name of thise one (dashboard)
 
 This is being run on one of my home servers that will one day grow up and turn into Jarvis.
